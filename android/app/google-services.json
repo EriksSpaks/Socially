@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "110040390264",
+    "firebase_url": "https://business-card-ec918-default-rtdb.europe-west1.firebasedatabase.app/",
+    "project_id": "business-card-ec918",
+    "storage_bucket": "business-card-ec918.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:110040390264:android:85dff702f9e02ca2536b8d",
+        "android_client_info": {
+          "package_name": "com.example.business_card"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "110040390264-dssc02m2u90j9vrgg8hq6bq9a8e8vj71.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.business_card",
+            "certificate_hash": "65bf471eb1600662d6987e03bd2a360f1a63c713"
+          }
+        },
+        {
+          "client_id": "110040390264-76ts38vhv7u5r0fcjq5nnmtbp786f8lj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLH01rrdvd4Jznysq_DMiMH0ZWSXRHlNU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "110040390264-76ts38vhv7u5r0fcjq5nnmtbp786f8lj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "110040390264-vtq4he2k8jjltuk1l4nj5d6rh0c7e72p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.businessCard"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
