@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="38.137" height="38.114" viewBox="0 0 38.137 38.114">
+  <g id="edit_mode_icon" transform="translate(-154.146 -784.7)">
+    <g id="Subtraction_1" data-name="Subtraction 1" transform="translate(184.929 797.145) rotate(-135)">
+      <path d="M 3.599999904632568 10.20010089874268 C 2.089555025100708 10.20010089874268 0.8545778393745422 8.997923851013184 0.8014759421348572 7.500201225280762 L 6.398523807525635 7.500201225280762 C 6.34542179107666 8.997923851013184 5.110445022583008 10.20010089874268 3.599999904632568 10.20010089874268 Z" stroke="none"/>
+      <path d="M 3.599999904632568 9.700100898742676 C 4.660758972167969 9.700100898742676 5.5561203956604 8.978386878967285 5.820831775665283 8.000201225280762 L 1.379168152809143 8.000201225280762 C 1.643879175186157 8.978386878967285 2.539240598678589 9.700100898742676 3.599999904632568 9.700100898742676 M 3.599999904632568 10.70010089874268 C 1.780209898948669 10.70010089874268 0.2996999025344849 9.21959114074707 0.2996999025344849 7.399801254272461 C 0.2996999025344849 7.266691207885742 0.3077799081802368 7.132241249084473 0.3237099051475525 7.000201225280762 L 6.876269817352295 7.000201225280762 C 6.892549991607666 7.135140895843506 6.900300025939941 7.269290924072266 6.900300025939941 7.399801254272461 C 6.900300025939941 9.21959114074707 5.419789791107178 10.70010089874268 3.599999904632568 10.70010089874268 Z" stroke="none" fill="#000"/>
+    </g>
+    <path id="Path_5" data-name="Path 5" d="M.309,24.719,25,0" transform="translate(160.5 787.5)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1"/>
+    <g id="Polygon_1" data-name="Polygon 1" transform="translate(159.45 822.814) rotate(-135)">
+      <path d="M 6.030170440673828 8.999997138977051 L 1.469830513000488 8.999997138977051 C 1.301690459251404 8.999997138977051 1.151010513305664 8.920268058776855 1.056430459022522 8.781257629394531 C 0.9618504643440247 8.642237663269043 0.9430104494094849 8.472817420959473 1.004750490188599 8.316417694091797 L 3.284920454025269 2.539977550506592 C 3.400810480117798 2.24637770652771 3.670190572738647 2.223567485809326 3.750000476837158 2.223567485809326 C 3.829800367355347 2.223567485809326 4.099180698394775 2.24637770652771 4.215070247650146 2.539977550506592 L 6.495250701904297 8.316417694091797 C 6.556990623474121 8.472817420959473 6.538150310516357 8.642237663269043 6.443570613861084 8.781257629394531 C 6.348990440368652 8.920268058776855 6.198310375213623 8.999997138977051 6.030170440673828 8.999997138977051 Z" stroke="none"/>
+      <path d="M 3.749998569488525 2.723572731018066 L 3.750000476837158 2.723567962646484 L 1.470037937164307 8.499998092651367 L 6.030101776123047 8.499807357788086 L 3.750000476837158 2.723577499389648 C 3.749999761581421 2.723575592041016 3.749999046325684 2.723574638366699 3.749998569488525 2.723572731018066 M 3.749995470046997 1.723562240600586 C 4.131805419921875 1.723562240600586 4.513615608215332 1.934507369995117 4.680150508880615 2.35639762878418 L 6.960330486297607 8.132837295532227 C 7.219370365142822 8.789077758789062 6.735700607299805 9.499998092651367 6.030170440673828 9.499998092651367 L 1.469830513000488 9.499998092651367 C 0.7643003463745117 9.499998092651367 0.2806305885314941 8.789077758789062 0.539670467376709 8.132837295532227 L 2.819840431213379 2.35639762878418 C 2.986375331878662 1.934507369995117 3.368185520172119 1.723562240600586 3.749995470046997 1.723562240600586 Z" stroke="none" fill="#000"/>
+    </g>
+    <line id="Line_1" data-name="Line 1" x1="12.215" y1="11.757" transform="translate(156.5 791.5)" fill="none" stroke="#000" stroke-linecap="square" stroke-width="1"/>
+    <line id="Line_3" data-name="Line 3" x2="12.215" y2="11.757" transform="translate(161.5 786.5)" fill="none" stroke="#000" stroke-linecap="square" stroke-width="1"/>
+    <line id="Line_5" data-name="Line 5" y1="5" x2="5" transform="translate(156.5 786.5)" fill="none" stroke="#000" stroke-linecap="square" stroke-width="1"/>
+    <line id="Line_6" data-name="Line 6" y1="5.503" x2="5" transform="translate(185.715 814.257)" fill="none" stroke="#000" stroke-linecap="square" stroke-width="1"/>
+    <line id="Line_7" data-name="Line 7" y1="1" x2="1" transform="translate(161.5 787.5)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_8" data-name="Line 8" y1="2" x2="2" transform="translate(162 788.5)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_9" data-name="Line 9" y1="1" x2="1" transform="translate(164 790)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_10" data-name="Line 10" y1="2" x2="2" transform="translate(164.5 791)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_11" data-name="Line 11" y1="1" x2="1" transform="translate(166.5 792.5)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_12" data-name="Line 12" y1="2" x2="2" transform="translate(167 793.5)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_13" data-name="Line 13" y1="1" x2="1" transform="translate(169 795)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_14" data-name="Line 14" y1="2" x2="2" transform="translate(169.5 796)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_15" data-name="Line 15" y1="1" x2="1" transform="translate(171.5 797.5)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_16" data-name="Line 16" y1="1" x2="1" transform="translate(178.765 804)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_17" data-name="Line 17" y1="2" x2="2" transform="translate(179.26 805)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_18" data-name="Line 18" y1="1" x2="1" transform="translate(181.26 806.5)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_19" data-name="Line 19" y1="2" x2="2" transform="translate(181.76 807.5)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_20" data-name="Line 20" y1="1" x2="1" transform="translate(183.76 809)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_21" data-name="Line 21" y1="2" x2="2" transform="translate(184.26 810.219)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_22" data-name="Line 22" y1="1.5" x2="1.5" transform="translate(186.215 811.257)" fill="none" stroke="#000" stroke-width="1"/>
+    <line id="Line_23" data-name="Line 23" y1="2" x2="2" transform="translate(186.76 812.719)" fill="none" stroke="#000" stroke-width="1"/>
+    <path id="Path_4" data-name="Path 4" d="M0,24.656H0L1.161,23.5l.077-.077L24.769,0" transform="translate(164.731 791.5)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1"/>
+    <line id="Line_36" data-name="Line 36" x2="12.215" y2="11.757" transform="translate(178.5 802.5)" fill="none" stroke="#000" stroke-linecap="square" stroke-width="1"/>
+    <line id="Line_37" data-name="Line 37" x1="11.5" y1="11" transform="translate(173.715 808.257)" fill="none" stroke="#000" stroke-linecap="square" stroke-width="1"/>
+  </g>
+</svg>
