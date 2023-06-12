@@ -50,7 +50,8 @@ dependencies:
   cached_network_image: ^3.2.2
   url_launcher: ^6.1.6
   reorderable_grid_view: ^2.2.6-alpha.14
-
+  flutter_keyboard_visibility: ^5.4.1
+  firebase_pagination: ^2.0.0
 
 dev_dependencies:
   flutter_test:

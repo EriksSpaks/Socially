@@ -2,6 +2,7 @@
 import 'dart:collection';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:business_card/assets/colors.dart';
 import 'package:business_card/pages/register_page.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
@@ -89,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
-          colors: const [Color(0xFFCAE9FB), Color(0xFFE5F4FD)],
+          colors: const [Colouring.colorGradient1, Colouring.colorGradient2],
           begin: Alignment.bottomCenter,
           end: Alignment.topCenter,
         )),
@@ -109,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                     "Welcome Back!",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Color(0xFF707070),
+                      color: Colouring.colorGrey,
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
@@ -147,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: RelativeSize(context: context)
                               .getScreenWidthPercentage(0.09),
                           decoration: BoxDecoration(
-                              color: Color(0xFFCAE9FB),
+                              color: Colouring.colorGradient1,
                               borderRadius: BorderRadius.circular(8)),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
@@ -185,7 +186,8 @@ class _LoginPageState extends State<LoginPage> {
                                   vertical: RelativeSize(context: context)
                                       .getScreenHeightPercentage(0.014),
                                 ),
-                                hintStyle: TextStyle(color: Color(0x55707070)),
+                                hintStyle:
+                                    TextStyle(color: Colouring.colorTransGrey),
                                 hintText: 'email'),
                           ),
                         ),
@@ -228,7 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: RelativeSize(context: context)
                               .getScreenWidthPercentage(0.09),
                           decoration: BoxDecoration(
-                              color: Color(0xFFCAE9FB),
+                              color: Colouring.colorGradient1,
                               borderRadius: BorderRadius.circular(8)),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
@@ -267,7 +269,8 @@ class _LoginPageState extends State<LoginPage> {
                                   vertical: RelativeSize(context: context)
                                       .getScreenHeightPercentage(0.014),
                                 ),
-                                hintStyle: TextStyle(color: Color(0x55707070)),
+                                hintStyle:
+                                    TextStyle(color: Colouring.colorTransGrey),
                                 hintText: 'password',
                                 suffixIcon: IconButton(
                                   alignment: Alignment.centerRight,
@@ -275,7 +278,7 @@ class _LoginPageState extends State<LoginPage> {
                                   icon: isPasswordHidden
                                       ? Icon(Icons.visibility_off)
                                       : Icon(Icons.visibility),
-                                  color: Color(0x55707070),
+                                  color: Colouring.colorTransGrey,
                                   onPressed: togglePasswordVisibility,
                                 )),
                           ),
@@ -295,7 +298,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text(
                         "Forgot password?",
                         style: TextStyle(
-                            color: Color(0xFFBBBBBB),
+                            color: Colouring.colorLightGrey,
                             fontWeight: FontWeight.bold,
                             fontSize: 16),
                       ),
@@ -312,10 +315,10 @@ class _LoginPageState extends State<LoginPage> {
                             .getScreenWidthPercentage(0.1)),
                     child: ElevatedButton(
                       style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Color(0xFF363DFF)),
-                          overlayColor:
-                              MaterialStateProperty.all(Color(0xFF0007CF)),
+                          backgroundColor: MaterialStateProperty.all(
+                              Colouring.colorButtonBlue),
+                          overlayColor: MaterialStateProperty.all(
+                              Colouring.colorButtonPressedBlue),
                           shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15))),
@@ -338,7 +341,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text(
                           "Login",
                           style: TextStyle(
-                            color: Color(0xFFFFFFFF),
+                            color: Colouring.colorWhite,
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                           ),
@@ -358,7 +361,7 @@ class _LoginPageState extends State<LoginPage> {
                         "Don't have an account? ",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Color(0xFFBBBBBB),
+                          color: Colouring.colorLightGrey,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -370,7 +373,7 @@ class _LoginPageState extends State<LoginPage> {
                           " Register now",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Color(0xFF51A0D5),
+                            color: Colouring.colorLightBlue,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
@@ -392,7 +395,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 1,
                           width: RelativeSize(context: context)
                               .getScreenWidthPercentage(paddingForLines),
-                          color: Color(0xFFBBBBBB),
+                          color: Colouring.colorLightGrey,
                         ),
                       ),
                       Padding(
@@ -406,7 +409,7 @@ class _LoginPageState extends State<LoginPage> {
                           "or",
                           style: TextStyle(
                             fontSize: 16,
-                            color: Color(0xFFBBBBBB),
+                            color: Colouring.colorLightGrey,
                           ),
                         ),
                       ),
@@ -421,7 +424,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 1,
                           width: RelativeSize(context: context)
                               .getScreenWidthPercentage(paddingForLines),
-                          color: Color(0xFFBBBBBB),
+                          color: Colouring.colorLightGrey,
                         ),
                       ),
                     ],
@@ -660,7 +663,7 @@ class _LoginPageState extends State<LoginPage> {
               (key1, key2) => key1.compareTo(key2));
         }
       } else {
-        await ref.set({user.uid: "social_media"});
+        await ref.update({user.uid: "social_media"});
       }
     }
   }
