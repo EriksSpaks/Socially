@@ -7,12 +7,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../assets/colors.dart';
 import '../../assets/size.dart';
 import '../../assets/urls.dart';
 
@@ -50,7 +52,7 @@ class _EditModePageState extends State<EditModePage> {
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
-        colors: const [Color(0xFFCAE9FB), Color(0xFFE5F4FD)],
+        colors: const [Colouring.colorGradient1, Colouring.colorGradient2],
         begin: Alignment.bottomCenter,
         end: Alignment.topCenter,
       )),
@@ -115,6 +117,7 @@ class _EditModePageState extends State<EditModePage> {
                         width: RelativeSize(context: context)
                             .getScreenWidthPercentage(0.03),
                       ),
+                      Spacer(),
                       if (userSocialMedia!.isNotEmpty)
                         Container(
                           alignment: Alignment.topRight,
@@ -283,7 +286,7 @@ class _EditModePageState extends State<EditModePage> {
                     .child(user!.uid)
                     .child("social_media");
                 print(userSocialMedia);
-                await ref.set({});
+                await ref.update({});
                 userSocialMedia!.forEach((key, value) async {
                   await ref.update({
                     key: {
@@ -296,7 +299,7 @@ class _EditModePageState extends State<EditModePage> {
               },
               child: Text(
                 "Save changes",
-                style: TextStyle(color: Color(0xFF707070), fontSize: 20),
+                style: TextStyle(color: Colouring.colorGrey, fontSize: 20),
               )),
         )
     ]));
@@ -456,9 +459,9 @@ class _EditModePageState extends State<EditModePage> {
                 RelativeSize(context: context).getScreenWidthPercentage(0.1),
             backgroundImage: CachedNetworkImageProvider(user!.photoURL!),
           )
-        : Icon(CupertinoIcons.person_circle,
+        : Icon(Icons.account_circle_outlined,
             size:
-                RelativeSize(context: context).getScreenWidthPercentage(0.24));
+                RelativeSize(context: context).getScreenWidthPercentage(0.20));
   }
 
   Future<void> goToUserSocialMedia(int index) async {
