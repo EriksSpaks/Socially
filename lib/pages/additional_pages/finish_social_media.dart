@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
+import '../../assets/colors.dart';
 import '../../assets/size.dart';
 import '../home_page.dart';
 
@@ -37,7 +38,7 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: Container(
-        decoration: const BoxDecoration(color: Color(0xFFDDDDDD)),
+        decoration: const BoxDecoration(color: Colouring.colorLightLightGrey),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Column(children: [
@@ -55,7 +56,7 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
               style: const TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF707070)),
+                  color: Colouring.colorGrey),
             ),
           ),
           SizedBox(
@@ -67,7 +68,7 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
             child: Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                    color: const Color(0xFFF0F0F0),
+                    color: Colouring.colorAlmostWhite,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(RelativeSize(context: context)
                             .getScreenWidthPercentage(0.1)),
@@ -79,8 +80,8 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
                         .getScreenWidthPercentage(0.075)),
                     child: const Text(
                         "Provide the link to your account to a selected social media:",
-                        style:
-                            TextStyle(color: Color(0xFF707070), fontSize: 20)),
+                        style: TextStyle(
+                            color: Colouring.colorGrey, fontSize: 20)),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -143,9 +144,9 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
                       ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all(Color(0xFFFFFFFF)),
+                                MaterialStateProperty.all(Colouring.colorWhite),
                             overlayColor:
-                                MaterialStateProperty.all(Color(0xFFCCCCCCC)),
+                                MaterialStateProperty.all(Colouring.colorWhite),
                             shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20))),
@@ -162,7 +163,7 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
                             child: Text(
                               "Back",
                               style: TextStyle(
-                                color: Color(0xFF363DFF),
+                                color: Colouring.colorButtonBlue,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -170,10 +171,10 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
                           )),
                       ElevatedButton(
                           style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Color(0xFF363DFF)),
-                            overlayColor:
-                                MaterialStateProperty.all(Color(0xFF0007CF)),
+                            backgroundColor: MaterialStateProperty.all(
+                                Colouring.colorButtonBlue),
+                            overlayColor: MaterialStateProperty.all(
+                                Colouring.colorButtonPressedBlue),
                             shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20))),
@@ -192,7 +193,7 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
                             child: Text(
                               "Done",
                               style: TextStyle(
-                                color: Color(0xFFFFFFFF),
+                                color: Colouring.colorWhite,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
                               ),

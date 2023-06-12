@@ -2,11 +2,14 @@ import 'dart:io' show File, Platform;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../assets/colors.dart';
 import '../../assets/size.dart';
 import '../login_page.dart';
 
@@ -21,12 +24,20 @@ class _SettingsPageState extends State<SettingsPage> {
   User? user = FirebaseAuth.instance.currentUser;
   String? imageURL;
   File? file;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    imageURL = user!.photoURL;
+  }
+
   @override
   Widget build(BuildContext context) {
-    imageURL = user!.photoURL;
     return SafeArea(
         child: Scaffold(
-      backgroundColor: const Color(0xFFF0F0F0),
+      backgroundColor: Colouring.colorAlmostWhite,
       body: Column(
         children: [
           Container(
@@ -34,7 +45,7 @@ class _SettingsPageState extends State<SettingsPage> {
             height:
                 RelativeSize(context: context).getScreenHeightPercentage(0.275),
             decoration: const BoxDecoration(
-              color: Color(0xFFDDDDDD),
+              color: Colouring.colorLightLightGrey,
             ),
             alignment: Alignment.center,
             child: Column(children: [
@@ -73,11 +84,12 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               Text(
                 user!.displayName!,
-                style: const TextStyle(fontSize: 18, color: Color(0xFF707070)),
+                style:
+                    const TextStyle(fontSize: 18, color: Colouring.colorGrey),
               ),
               Text(
                 user!.email!,
-                style: const TextStyle(color: Color(0xFF707070)),
+                style: const TextStyle(color: Colouring.colorGrey),
               )
             ]),
           ),
@@ -105,7 +117,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           .getScreenWidthPercentage(0.15),
                       backgroundImage: file != null
                           ? FileImage(file!) as ImageProvider
-                          : CachedNetworkImageProvider(imageURL!),
+                          : CachedNetworkImageProvider(imageURL!,
+                              cacheManager: DefaultCacheManager()),
                     ),
                   ),
                   Padding(
@@ -130,7 +143,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Stack(
                 children: [
                   Icon(
-                    CupertinoIcons.person_circle,
+                    Icons.account_circle_outlined,
                     size: RelativeSize(context: context)
                         .getScreenWidthPercentage(0.30),
                     color: Colors.black.withOpacity(0.25),
@@ -149,8 +162,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   )
                 ],
               ),
-              onTap: () => setProfilePicture(),
-            );
+              onTap: () => setState(() {
+                    setProfilePicture();
+                  }));
     }
   }
 
@@ -273,13 +287,16 @@ class _SettingsPageState extends State<SettingsPage> {
                         } finally {
                           await ref.putFile(File(image!.path));
                           await ref.getDownloadURL().then((value) {
-                            setState(() {
-                              imageURL = value;
-                            });
+                            imageURL = value;
+                            FirebaseDatabase.instance
+                                .ref("users")
+                                .child(user!.uid)
+                                .update({"photoURL": value});
                           });
                           file = File(image.path);
                           await user
                               ?.updatePhotoURL(await ref.getDownloadURL());
+                          setState(() {});
                           Navigator.pop(dialogContext!);
                         }
                       },
@@ -317,13 +334,16 @@ class _SettingsPageState extends State<SettingsPage> {
                         } finally {
                           await ref.putFile(File(image!.path));
                           await ref.getDownloadURL().then((value) {
-                            setState(() {
-                              imageURL = value;
-                            });
+                            imageURL = value;
+                            FirebaseDatabase.instance
+                                .ref("users")
+                                .child(user!.uid)
+                                .update({"photoURL": value});
                           });
                           file = File(image.path);
                           await user
                               ?.updatePhotoURL(await ref.getDownloadURL());
+                          setState(() {});
                           Navigator.pop(dialogContext!);
                         }
                       },

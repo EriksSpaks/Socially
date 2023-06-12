@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:business_card/assets/colors.dart';
 import 'package:business_card/pages/main_pages/edit_mode_page.dart';
-import 'package:business_card/pages/main_pages/profile_page.dart';
+import 'package:business_card/pages/main_pages/search_page.dart';
 import 'package:business_card/pages/main_pages/settings_page.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../assets/size.dart';
@@ -75,40 +78,64 @@ class _HomePageState extends State<HomePage>
     super.dispose();
   }
 
+  Widget getProfilePicture() {
+    return FirebaseAuth.instance.currentUser?.photoURL != null
+        ? CircleAvatar(
+            radius:
+                RelativeSize(context: context).getScreenWidthPercentage(0.1),
+            backgroundImage: CachedNetworkImageProvider(
+                FirebaseAuth.instance.currentUser!.photoURL!),
+          )
+        : Container();
+  }
+
   @override
   Widget build(BuildContext context) {
     print("$firstConnection 1");
     print("$userSocialMedia gogogog");
+    getProfilePicture();
     return FutureBuilder(
         future: myFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return WillPopScope(
               onWillPop: () async => false,
-              child: Scaffold(
-                bottomNavigationBar: AnimatedTabBar(
-                  tabs: tabs,
-                  tabController: _tabBarController,
-                ),
-                body: TabBarView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: _tabBarController,
-                  children: [
-                    ProfilePage(),
-                    EditModePage(
-                      userSocialMedia: userSocialMedia,
-                      firstConnection: firstConnection,
+              child: KeyboardVisibilityBuilder(
+                  builder: (context, isKeyboardVisible) {
+                return Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  bottomNavigationBar: Visibility(
+                    visible: !isKeyboardVisible,
+                    maintainState: true,
+                    child: Builder(builder: (context) {
+                      return AnimatedTabBar(
+                        tabs: tabs,
+                        tabController: _tabBarController,
+                      );
+                    }),
+                  ),
+                  body: SafeArea(
+                    child: TabBarView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      controller: _tabBarController,
+                      children: [
+                        ProfilePage(),
+                        EditModePage(
+                          userSocialMedia: userSocialMedia,
+                          firstConnection: firstConnection,
+                        ),
+                        SettingsPage(),
+                      ],
                     ),
-                    SettingsPage(),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              }),
             );
           }
           return Container(
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
-              colors: [Color(0xFFCAE9FB), Color(0xFFE5F4FD)],
+              colors: [Colouring.colorGradient1, Colouring.colorGradient2],
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
             )),
@@ -144,7 +171,6 @@ class _HomePageState extends State<HomePage>
           print(userSocialMedia);
         } else {
           userSocialMedia = {"values": "0"};
-          await ref.set({user.uid: "social_media"});
         }
       }
     }
@@ -171,6 +197,7 @@ class _AnimatedTabBarState extends State<AnimatedTabBar> {
   void initState() {
     super.initState();
     widget.tabController.addListener(() {
+      if (!mounted) return;
       setState(() {
         tabIndex = widget.tabController.index;
       });
