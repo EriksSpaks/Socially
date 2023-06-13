@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:business_card/auth/main_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -36,18 +36,16 @@ class _SplashScreenState extends State<SplashScreen> {
   Map<String, dynamic>? userSocialMedia;
 
   Future<void> createUserDatabase() async {
-    final ref = FirebaseDatabase.instance.ref("users");
-
-    final event = await ref.get();
+    final firestoreDatabase = FirebaseFirestore.instance.collection("users");
+    //print(user?.uid);
     if (user != null) {
-      if (event.exists) {
-        final ev = await ref.child('${user!.uid}/social_media').get();
-        if (ev.value != "" && ev.exists) {
-          userSocialMedia =
-              Map<String, dynamic>.from(ev.value as Map<dynamic, dynamic>);
-        } else {
-          await ref.update({user!.uid: "social_media"});
-        }
+      final data = await firestoreDatabase.doc(user!.uid).get();
+      print(data.data() as Map<dynamic, dynamic>);
+      final socialMedia = data.data()!["social_media"] as Map<dynamic, dynamic>;
+      print('Not error 1 ');
+      if (socialMedia.isNotEmpty) {
+        print('Not error 2 ');
+        userSocialMedia = Map<String, dynamic>.from(socialMedia);
       }
     }
   }

@@ -31,27 +31,30 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^1.24.0
-  firebase_core_platform_interface: 4.5.1
+  firebase_core: ^2.13.1
+  firebase_core_platform_interface: ^4.8.0
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.`
-  google_sign_in: ^5.4.2
+  google_sign_in: ^6.1.4
   flutter_inset_box_shadow: ^1.0.8
-  flutter_svg: ^1.1.5
-  firebase_auth: ^3.11.2
-  awesome_snackbar_content: ^0.0.8
+  flutter_svg: ^2.0.5
+  firebase_auth: ^4.6.2
+  awesome_snackbar_content: ^0.1.3
   form_field_validator: ^1.1.0
-  flutter_facebook_auth: ^4.4.1+1
-  image_picker: ^0.8.6
-  firebase_storage: ^10.3.11
-  firebase_database: ^9.1.7
-  cached_network_image: ^3.2.2
-  url_launcher: ^6.1.6
-  reorderable_grid_view: ^2.2.6-alpha.14
+  flutter_facebook_auth: ^5.0.11
+  image_picker: ^0.8.8
+  firebase_storage: ^11.2.2
+  firebase_database: ^10.2.2
+  cached_network_image: ^3.2.3
+  url_launcher: ^6.1.11
+  reorderable_grid_view: ^2.2.6
   flutter_keyboard_visibility: ^5.4.1
-  firebase_pagination: ^2.0.0
+  firebase_pagination: ^3.0.0
+  infinite_scroll_pagination: ^3.2.0
+  cloud_firestore: ^4.8.0
+  
 
 dev_dependencies:
   flutter_test:

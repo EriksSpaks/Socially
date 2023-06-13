@@ -1,13 +1,9 @@
 // ignore_for_file: prefer_const_constructors
-import 'dart:collection';
-
 import 'package:business_card/pages/additional_pages/add_social_media.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
@@ -43,7 +39,6 @@ class _EditModePageState extends State<EditModePage> {
     super.initState();
     isReorderable = false;
     setSocialMedia();
-    //setSocialMedia();
   }
 
   @override
@@ -281,20 +276,22 @@ class _EditModePageState extends State<EditModePage> {
                 setState(() {
                   isReorderable = false;
                 });
-                final ref = FirebaseDatabase.instance
-                    .ref("users")
-                    .child(user!.uid)
-                    .child("social_media");
-                print(userSocialMedia);
-                await ref.update({});
+
+                final firestoreDatabase = FirebaseFirestore.instance;
+
                 userSocialMedia!.forEach((key, value) async {
-                  await ref.update({
-                    key: {
-                      "position":
-                          userSocialMedia!.keys.toList().indexOf(key) + 1,
-                      "url": value
+                  await firestoreDatabase
+                      .collection("users")
+                      .doc(user!.uid)
+                      .set({
+                    "social_media": {
+                      key: {
+                        "position":
+                            userSocialMedia!.keys.toList().indexOf(key) + 1,
+                        "url": value
+                      }
                     }
-                  });
+                  }, SetOptions(merge: true));
                 });
               },
               child: Text(
