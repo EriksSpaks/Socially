@@ -1,5 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
@@ -212,16 +212,17 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
 
   void setSocialMedia() async {
     User? user = FirebaseAuth.instance.currentUser;
-    final ref = FirebaseDatabase.instance
-        .ref("users")
-        .child(user!.uid)
-        .child("social_media");
-    await ref.update({
-      socialMediaName: {
-        "url": linkController.text.toString(),
-        "position": socialMediaLength + 1
+
+    final firestoreDatabase = FirebaseFirestore.instance;
+    firestoreDatabase.collection("users").doc(user!.uid).set({
+      "social_media": {
+        socialMediaName: {
+          "url": linkController.text.toString(),
+          "position": socialMediaLength + 1
+        }
       }
-    });
+    }, SetOptions(merge: true));
+
     getToHomePage();
   }
 

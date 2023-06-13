@@ -2,10 +2,11 @@
 
 import 'package:business_card/assets/size.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_pagination/firebase_pagination.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../assets/colors.dart';
 
@@ -31,28 +32,35 @@ class _ProfilePageState extends State<ProfilePage> {
   ];
   List<UserInfo> _userInfo = [];
   List<UserInfo> _displayList = [];
-  final ref = FirebaseDatabase.instance.ref().child("users");
-  late final users;
   final userEmail = FirebaseAuth.instance.currentUser!.email;
+  final TextEditingController _textController = TextEditingController();
 
   final _scrollController = ScrollController();
 
   bool isLoading = false;
   String lastItemId = '';
 
-  Future<void> bib() async {
-    users = await ref.get();
-    print(users);
-  }
-
-  late Future<void> future;
-
   @override
   void initState() {
     super.initState();
-    // _scrollController.addListener(_scrollListener);
-    future = bib();
+
     // retrieveNextPage();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        print("bobibobi");
+        // retrieveNextPage();
+        updateList(_textController.text.toString());
+      }
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Widget getProfilePicture() {
@@ -66,40 +74,38 @@ class _ProfilePageState extends State<ProfilePage> {
         : Container();
   }
 
-  final databaseRef = FirebaseDatabase.instance.ref().child("users");
   int pageSize = 10;
   int currentPage = 0;
+  String lastUserKey = '';
 
 // // function to retrieve the next page of data
-//   void retrieveNextPage() async {
-//     // calculate the starting index of the next page
-//     int startIndex = currentPage * pageSize;
-//     final ref = FirebaseDatabase.instance.ref("users");
+  // void retrieveNextPage() async {
+  //   // calculate the starting index of the next page
+  //   final ref = FirebaseDatabase.instance.ref().child("users");
+  //   Query query = ref.orderByKey();
+  //   // use startAt() and limitToFirst() to retrieve the next page of data
+  //   if (lastItemId.isNotEmpty) {
+  //     query = query.startAfter(lastItemId);
+  //   }
 
-//     final event = await ref.get();
-//     // use startAt() and limitToFirst() to retrieve the next page of data
-//     final snapshot = await databaseRef
-//         .startAt(startIndex.toString())
-//         .limitToFirst(pageSize)
-//         .get();
+  //   final snapshot = await query.limitToFirst(pageSize).get();
 
-//     print("${event.exists} bobob"); // Process the data here
-//     if (snapshot.value != null) {
-//       var users = snapshot.value as Map<dynamic, dynamic>;
-//       users.forEach((key, value) {
-//         // do something with each user
-//         print("$key LOOOOOOOOOLL $value");
-//         var usersInfo = value as Map<dynamic, dynamic>;
-//         if (usersInfo["email"].toString() != userEmail) {
-//           _userInfo.add(UserInfo(usersInfo["display_name"], usersInfo["email"],
-//               usersInfo["photoURL"]));
-//         }
-//       });
-//     }
-//     _displayList = List.from(_userInfo);
-//     // increment the current page
-//     currentPage++;
-//   }
+  //   print("${snapshot.exists} bobob"); // Process the data here
+  //   if (snapshot.value != null) {
+  //     var users = snapshot.value as Map<dynamic, dynamic>;
+  //     users.forEach((key, value) {
+  //       // do something with each user
+  //       print("$key LOOOOOOOOOLL $value");
+  //       var usersInfo = value as Map<dynamic, dynamic>;
+  //       if (usersInfo["email"].toString() != userEmail) {
+  //         _userInfo.add(UserInfo(usersInfo["display_name"], usersInfo["email"],
+  //             usersInfo["photoURL"]));
+  //         lastItemId = key;
+  //       }
+  //     });
+  //   }
+  //   _displayList = List.from(_userInfo);
+  // }
 
   // Future<void> retrieveNextPage() async {
   //   if (isLoading) {
@@ -149,13 +155,6 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  // void _scrollListener() {
-  //   if (_scrollController.position.pixels ==
-  //       _scrollController.position.maxScrollExtent) {
-  //     retrieveNextPage();
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -199,7 +198,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     horizontal: RelativeSize(context: context)
                         .getScreenWidthPercentage(0.05)),
                 child: TextField(
-                  onChanged: (value) => updateList(value),
+                  controller: _textController,
+                  onChanged: (value) => setState(() {}),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
                       filled: true,
@@ -262,43 +262,32 @@ class _ProfilePageState extends State<ProfilePage> {
                 //             .getScreenWidthPercentage(0.1)),
                 //   ),
                 // ),
-                child: RealtimeDBPagination(
-                    query: FirebaseDatabase.instance.ref().child("users"),
-                    orderBy: null,
-                    itemBuilder: (context, dataSnapshot, index) {
-                      final usersInfo =
-                          dataSnapshot.value as Map<dynamic, dynamic>;
-
-                      UserInfo user = UserInfo(usersInfo["display_name"],
-                          usersInfo["email"], usersInfo["photoURL"]);
-
-                      if (user.email == userEmail) {
-                        return SizedBox.shrink();
-                      }
-
-                      // if (users != null) {
-                      //   users.forEach((key, value) {
-                      //     // do something with each user
-
-                      //     print("$key LOOOOOOOOOLL $value");
-                      //     var usersInfo = value as Map<dynamic, dynamic>;
-                      //     if (usersInfo["email"].toString() != userEmail) {
-                      //       _userInfo.add(UserInfo(usersInfo["display_name"],
-                      //           usersInfo["email"], usersInfo["photoURL"]));
-                      //     }
-                      //     lastItemId = key.toString();
-                      //   });
-                      // }
-                      // _displayList = List.from(_userInfo);
-
+                child: FirestorePagination(
+                  query: FirebaseFirestore.instance
+                      .collection("users")
+                      .orderBy("display_name")
+                      .where("display_name",
+                          isNotEqualTo:
+                              FirebaseAuth.instance.currentUser!.displayName),
+                  itemBuilder: (context, documentSnapshot, index) {
+                    final data =
+                        documentSnapshot.data() as Map<dynamic, dynamic>;
+                    final user = UserInfo(
+                        data["display_name"], data["email"], data["photoURL"]);
+                    if (user.displayName
+                            .toLowerCase()
+                            .contains(_textController.text.toLowerCase()) ||
+                        user.email
+                            .toLowerCase()
+                            .contains(_textController.text.toLowerCase())) {
                       return ListTile(
                         title: Text(user.displayName),
                         subtitle: Text(user.email),
                         leading: user.photoURL == "-1"
-                            ? Icon(
-                                Icons.account_circle_outlined,
-                                size: RelativeSize(context: context)
-                                    .getScreenWidthPercentage(0.15),
+                            ? SvgPicture.asset(
+                                'assets/images/icon_profile.svg',
+                                width: RelativeSize(context: context)
+                                    .getScreenWidthPercentage(0.125),
                               )
                             : CircleAvatar(
                                 backgroundImage:
@@ -312,7 +301,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             horizontal: RelativeSize(context: context)
                                 .getScreenWidthPercentage(0.1)),
                       );
-                    }),
+                    }
+                    return const SizedBox(
+                      height: 0,
+                      width: 0,
+                    );
+                  },
+                ),
               ),
             )
           ],

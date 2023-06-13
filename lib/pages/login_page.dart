@@ -4,7 +4,7 @@ import 'dart:collection';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:business_card/assets/colors.dart';
 import 'package:business_card/pages/register_page.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
@@ -649,21 +649,16 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> createUserDatabase() async {
     User? user = FirebaseAuth.instance.currentUser;
-    final ref = FirebaseDatabase.instance.ref("users");
+    final firestoreDatabase = FirebaseFirestore.instance.collection("users");
     //print(user?.uid);
-    final event = await ref.get();
     if (user != null) {
-      if (event.exists) {
-        final ev = await ref.child('${user.uid}/social_media').get();
-        print('Not error 1 ');
-        if (ev.value != "") {
-          print('Not error 2 ');
-          userSocialMedia = SplayTreeMap<String, dynamic>.from(
-              ev.value as Map<dynamic, dynamic>,
-              (key1, key2) => key1.compareTo(key2));
-        }
-      } else {
-        await ref.update({user.uid: "social_media"});
+      final data = await firestoreDatabase.doc(user.uid).get();
+      final socialMedia = data.data()!["social_media"] as Map<dynamic, dynamic>;
+      print('Not error 1 ');
+      if (socialMedia.isNotEmpty) {
+        print('Not error 2 ');
+        userSocialMedia = SplayTreeMap<String, dynamic>.from(
+            socialMedia, (key1, key2) => key1.compareTo(key2));
       }
     }
   }

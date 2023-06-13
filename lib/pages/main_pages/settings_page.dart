@@ -1,8 +1,8 @@
 import 'dart:io' show File, Platform;
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -288,9 +288,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           await ref.putFile(File(image!.path));
                           await ref.getDownloadURL().then((value) {
                             imageURL = value;
-                            FirebaseDatabase.instance
-                                .ref("users")
-                                .child(user!.uid)
+                            FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(user!.uid)
                                 .update({"photoURL": value});
                           });
                           file = File(image.path);
@@ -335,9 +335,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           await ref.putFile(File(image!.path));
                           await ref.getDownloadURL().then((value) {
                             imageURL = value;
-                            FirebaseDatabase.instance
-                                .ref("users")
-                                .child(user!.uid)
+                            FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(user!.uid)
                                 .update({"photoURL": value});
                           });
                           file = File(image.path);
