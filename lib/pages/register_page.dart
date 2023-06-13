@@ -1,11 +1,8 @@
 // ignore_for_file: prefer_const_constructors
-
-import 'dart:collection';
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:business_card/pages/home_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -559,23 +556,20 @@ class _RegisterPageState extends State<RegisterPage> {
         await user!.updateDisplayName(
             "${_firstNameController.text.trim()} ${_lastNameController.text.trim()}");
         await user.reload();
-        print("Current user ${FirebaseAuth.instance.currentUser}");
 
-        final ref = FirebaseDatabase.instance.ref("users");
-        await ref.update({user.uid: "social_media"});
-        final map = {
-          "email": user.email,
+        final firestoreDatabase = FirebaseFirestore.instance;
+
+        await firestoreDatabase.collection("users").doc(user.uid).set({
           "display_name":
               "${_firstNameController.text.trim()} ${_lastNameController.text.trim()}",
-          "photoURL": "-1"
-        };
-        await ref.child(user.uid).update(map);
-        //await user?.updateDisplayName(
-        //  "${_firstNameController.text.trim()} ${_lastNameController.text.trim()}");
-        final userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(
-                email: _emailController.text.trim(),
-                password: _passwordController.text.trim());
+          "email": _emailController.text.trim(),
+          "photoURL": "-1",
+          "social_media": {}
+        }, SetOptions(merge: true));
+
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim());
 
         if (!mounted) return;
         FocusManager.instance.primaryFocus?.unfocus();

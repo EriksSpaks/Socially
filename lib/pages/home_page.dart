@@ -5,8 +5,8 @@ import 'package:business_card/pages/main_pages/edit_mode_page.dart';
 import 'package:business_card/pages/main_pages/search_page.dart';
 import 'package:business_card/pages/main_pages/settings_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -154,24 +154,21 @@ class _HomePageState extends State<HomePage>
   Future<void> createUserDatabase() async {
     User? user = FirebaseAuth.instance.currentUser;
     Map<String, dynamic> userSM = {};
-    List<String> arr = [];
-    final ref = FirebaseDatabase.instance.ref("users");
-    //print(user?.uid);
-    final event = await ref.get();
+    final firestoreDatabase = FirebaseFirestore.instance;
     if (user != null) {
-      if (event.exists) {
-        final ev = await ref.child('${user.uid}/social_media').get();
-        if (ev.value != "" && ev.exists) {
-          userSM = Map<String, dynamic>.from(ev.value as Map<dynamic, dynamic>);
-          List<MapEntry<String, dynamic>> usmList = userSM.entries.toList();
-          usmList.sort(
-              (a, b) => a.value["position"] < b.value["position"] ? -1 : 1);
-          userSocialMedia = Map.fromEntries(
-              usmList.map((entry) => MapEntry(entry.key, entry.value["url"])));
-          print(userSocialMedia);
-        } else {
-          userSocialMedia = {"values": "0"};
-        }
+      final bob =
+          await firestoreDatabase.collection("users").doc(user.uid).get();
+      final data = bob.data()!["social_media"] as Map<dynamic, dynamic>;
+      if (data.isNotEmpty) {
+        userSM = Map<String, dynamic>.from(data);
+        List<MapEntry<String, dynamic>> usmList = userSM.entries.toList();
+        usmList
+            .sort((a, b) => a.value["position"] < b.value["position"] ? -1 : 1);
+        userSocialMedia = Map.fromEntries(
+            usmList.map((entry) => MapEntry(entry.key, entry.value["url"])));
+        print(userSocialMedia);
+      } else {
+        userSocialMedia = {"values": "0"};
       }
     }
   }
