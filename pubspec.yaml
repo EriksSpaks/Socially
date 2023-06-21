@@ -54,6 +54,8 @@ dependencies:
   firebase_pagination: ^3.0.0
   infinite_scroll_pagination: ^3.2.0
   cloud_firestore: ^4.8.0
+  flutter_cache_manager: ^3.3.0
+  rive: ^0.11.3
   
 
 dev_dependencies:
@@ -83,6 +85,7 @@ flutter:
   assets:
     - assets/images/
     - assets/socialMediaImages/
+    - assets/anim/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
