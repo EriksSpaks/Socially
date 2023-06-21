@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io' show File, Platform;
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -27,7 +29,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     imageURL = user!.photoURL;
@@ -356,7 +357,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Route<Object> goToLoginPage() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          const LoginPage(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0, 1);
         const end = Offset.zero;

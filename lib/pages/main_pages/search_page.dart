@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'package:business_card/assets/size.dart';
+import 'package:business_card/pages/additional_pages/profile_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,14 +11,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../assets/colors.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<SearchPage> createState() => _SearchPageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _SearchPageState extends State<SearchPage> {
   List bob = [
     "first",
     "second",
@@ -30,36 +31,12 @@ class _ProfilePageState extends State<ProfilePage> {
     "fourth",
     "fifth"
   ];
-  List<UserInfo> _userInfo = [];
-  List<UserInfo> _displayList = [];
   final userEmail = FirebaseAuth.instance.currentUser!.email;
   final TextEditingController _textController = TextEditingController();
-
-  final _scrollController = ScrollController();
-
-  bool isLoading = false;
-  String lastItemId = '';
-
-  @override
-  void initState() {
-    super.initState();
-
-    // retrieveNextPage();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        print("bobibobi");
-        // retrieveNextPage();
-        updateList(_textController.text.toString());
-      }
-      setState(() {});
-    });
-  }
 
   @override
   void dispose() {
     _textController.dispose();
-    _scrollController.dispose();
     super.dispose();
   }
 
@@ -74,85 +51,23 @@ class _ProfilePageState extends State<ProfilePage> {
         : Container();
   }
 
-  int pageSize = 10;
-  int currentPage = 0;
-  String lastUserKey = '';
+  Route<Object> _goToProfilePage(UserInfo userInfo) {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            ProfilePage(userInfo: userInfo),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1, 0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
 
-// // function to retrieve the next page of data
-  // void retrieveNextPage() async {
-  //   // calculate the starting index of the next page
-  //   final ref = FirebaseDatabase.instance.ref().child("users");
-  //   Query query = ref.orderByKey();
-  //   // use startAt() and limitToFirst() to retrieve the next page of data
-  //   if (lastItemId.isNotEmpty) {
-  //     query = query.startAfter(lastItemId);
-  //   }
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-  //   final snapshot = await query.limitToFirst(pageSize).get();
-
-  //   print("${snapshot.exists} bobob"); // Process the data here
-  //   if (snapshot.value != null) {
-  //     var users = snapshot.value as Map<dynamic, dynamic>;
-  //     users.forEach((key, value) {
-  //       // do something with each user
-  //       print("$key LOOOOOOOOOLL $value");
-  //       var usersInfo = value as Map<dynamic, dynamic>;
-  //       if (usersInfo["email"].toString() != userEmail) {
-  //         _userInfo.add(UserInfo(usersInfo["display_name"], usersInfo["email"],
-  //             usersInfo["photoURL"]));
-  //         lastItemId = key;
-  //       }
-  //     });
-  //   }
-  //   _displayList = List.from(_userInfo);
-  // }
-
-  // Future<void> retrieveNextPage() async {
-  //   if (isLoading) {
-  //     return;
-  //   }
-
-  //   isLoading = true;
-
-  //   final ref = FirebaseDatabase.instance.ref();
-  //   Query query = ref.child("users").orderByKey();
-
-  //   if (lastItemId.isNotEmpty) {
-  //     query = query.startAfter([lastItemId]);
-  //   }
-
-  //   query = query.limitToFirst(pageSize);
-
-  //   final snapshot = await query.get();
-
-  //   final users = snapshot.value as Map<dynamic, dynamic>;
-  //   if (users != null) {
-  //     users.forEach((key, value) {
-  //       // do something with each user
-  //       print("$key LOOOOOOOOOLL $value");
-  //       var usersInfo = value as Map<dynamic, dynamic>;
-  //       if (usersInfo["email"].toString() != userEmail) {
-  //         _userInfo.add(UserInfo(usersInfo["display_name"], usersInfo["email"],
-  //             usersInfo["photoURL"]));
-  //       }
-  //       lastItemId = key.toString();
-  //     });
-  //   }
-
-  //   _displayList = List.from(_userInfo);
-
-  //   isLoading = false;
-  // }
-
-  void updateList(String value) {
-    //function that filters list of users by name
-    setState(() {
-      _displayList = _userInfo
-          .where((element) =>
-              element.displayName.toLowerCase().contains(value.toLowerCase()) ||
-              element.email.toLowerCase().contains(value.toLowerCase()))
-          .toList();
-    });
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        });
   }
 
   @override
@@ -204,7 +119,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
-                      suffixIcon: Icon(Icons.search),
+                      suffixIcon: const Icon(Icons.search),
                       suffixIconColor: Colouring.colorLightGrey,
                       border: OutlineInputBorder(
                           borderSide: BorderSide.none,
@@ -215,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               .getScreenWidthPercentage(0.01),
                           horizontal: RelativeSize(context: context)
                               .getScreenWidthPercentage(0.05)),
-                      hintStyle: TextStyle(
+                      hintStyle: const TextStyle(
                         fontWeight: FontWeight.w600,
                         color: Colouring.colorLightGrey,
                       ),
@@ -237,31 +152,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         topRight: Radius.circular(RelativeSize(context: context)
                             .getScreenWidthPercentage(0.13)))),
                 width: double.infinity,
-                // child: ListView.builder(
-                //   controller: _scrollController,
-                //   itemCount: _displayList.length,
-                //   itemBuilder: (context, index) => ListTile(
-                //     title: Text(_displayList[index].displayName),
-                //     subtitle: Text(_displayList[index].email),
-                //     leading: _displayList[index].photoURL == "-1"
-                //         ? Icon(
-                //             Icons.account_circle_outlined,
-                //             size: RelativeSize(context: context)
-                //                 .getScreenWidthPercentage(0.15),
-                //           )
-                //         : CircleAvatar(
-                //             backgroundImage: CachedNetworkImageProvider(
-                //                 _displayList[index].photoURL),
-                //             radius: RelativeSize(context: context)
-                //                 .getScreenWidthPercentage(0.0625),
-                //           ),
-                //     contentPadding: EdgeInsets.symmetric(
-                //         vertical: RelativeSize(context: context)
-                //             .getScreenHeightPercentage(0.01),
-                //         horizontal: RelativeSize(context: context)
-                //             .getScreenWidthPercentage(0.1)),
-                //   ),
-                // ),
                 child: FirestorePagination(
                   query: FirebaseFirestore.instance
                       .collection("users")
@@ -272,6 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   itemBuilder: (context, documentSnapshot, index) {
                     final data =
                         documentSnapshot.data() as Map<dynamic, dynamic>;
+                    print(data);
                     final user = UserInfo(
                         data["display_name"], data["email"], data["photoURL"]);
                     if (user.displayName
@@ -280,26 +171,30 @@ class _ProfilePageState extends State<ProfilePage> {
                         user.email
                             .toLowerCase()
                             .contains(_textController.text.toLowerCase())) {
-                      return ListTile(
-                        title: Text(user.displayName),
-                        subtitle: Text(user.email),
-                        leading: user.photoURL == "-1"
-                            ? SvgPicture.asset(
-                                'assets/images/icon_profile.svg',
-                                width: RelativeSize(context: context)
-                                    .getScreenWidthPercentage(0.125),
-                              )
-                            : CircleAvatar(
-                                backgroundImage:
-                                    CachedNetworkImageProvider(user.photoURL),
-                                radius: RelativeSize(context: context)
-                                    .getScreenWidthPercentage(0.0625),
-                              ),
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: RelativeSize(context: context)
-                                .getScreenHeightPercentage(0.01),
-                            horizontal: RelativeSize(context: context)
-                                .getScreenWidthPercentage(0.1)),
+                      return GestureDetector(
+                        onTap: () =>
+                            Navigator.of(context).push(_goToProfilePage(user)),
+                        child: ListTile(
+                          title: Text(user.displayName),
+                          subtitle: Text(user.email),
+                          leading: user.photoURL == "-1"
+                              ? SvgPicture.asset(
+                                  'assets/images/icon_profile.svg',
+                                  width: RelativeSize(context: context)
+                                      .getScreenWidthPercentage(0.125),
+                                )
+                              : CircleAvatar(
+                                  backgroundImage:
+                                      CachedNetworkImageProvider(user.photoURL),
+                                  radius: RelativeSize(context: context)
+                                      .getScreenWidthPercentage(0.0625),
+                                ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: RelativeSize(context: context)
+                                  .getScreenHeightPercentage(0.01),
+                              horizontal: RelativeSize(context: context)
+                                  .getScreenWidthPercentage(0.1)),
+                        ),
                       );
                     }
                     return const SizedBox(
