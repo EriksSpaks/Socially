@@ -428,27 +428,6 @@ class _EditModePageState extends State<EditModePage> {
     }
   }
 
-  // Future<void> createUserDatabase() async {
-  //   User? user = FirebaseAuth.instance.currentUser;
-  //   final ref = FirebaseDatabase.instance.ref("users");
-  //   //print(user?.uid);
-  //   final event = await ref.get();
-  //   if (user != null) {
-  //     if (event.exists) {
-  //       final ev = await ref.child('${user.uid}/social_media').get();
-  //       print('Not error 3 ');
-  //       if (ev.value != "") {
-  //         print('Not error 4 ');
-  //         userSocialMedia =
-  //             Map<String, dynamic>.from(ev.value as Map<dynamic, dynamic>);
-  //       }
-  //     } else {
-  //       userSocialMedia = {"values": "0"};
-  //       await ref.set({user.uid: "social_media"});
-  //     }
-  //   }
-  // }
-
   Widget getProfilePicture() {
     return user?.photoURL != null
         ? CircleAvatar(
