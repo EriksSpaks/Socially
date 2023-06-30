@@ -1,6 +1,7 @@
-import 'package:business_card/assets/urls.dart';
+import 'package:business_card/styles/size.dart';
+import 'package:business_card/styles/urls.dart';
+import 'package:business_card/styles/colors.dart';
 import 'package:flutter/material.dart';
-import '../../assets/size.dart';
 import 'finish_social_media.dart';
 
 class AddSocialMediaPage extends StatefulWidget {
@@ -28,7 +29,6 @@ class _AddSocialMediaPageState extends State<AddSocialMediaPage> {
       userSocialMedia.clear();
     }
     for (var element in URLS.socialMediaUrls.values.toList()) {
-      print(userSocialMedia.values);
       if (!userSocialMediaAssets.contains(element)) {
         additionalSocialMedia.add(element);
       }
@@ -46,7 +46,7 @@ class _AddSocialMediaPageState extends State<AddSocialMediaPage> {
       body: SafeArea(
         child: Container(
           decoration: const BoxDecoration(
-            color: Color(0xFFDDDDDD),
+            color: Colouring.colorLightLightGrey,
           ),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
@@ -66,7 +66,7 @@ class _AddSocialMediaPageState extends State<AddSocialMediaPage> {
                   "What social media do you want to add?",
                   style: TextStyle(
                       fontSize: 24,
-                      color: Color(0xFF707070),
+                      color: Colouring.colorGrey,
                       fontWeight: FontWeight.w600),
                 ),
               ),
@@ -77,7 +77,7 @@ class _AddSocialMediaPageState extends State<AddSocialMediaPage> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                      color: const Color(0xFFF0F0F0),
+                      color: Colouring.colorAlmostWhite,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(
                               RelativeSize(context: context)

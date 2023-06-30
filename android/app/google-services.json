@@ -1,50 +1,43 @@
 {
   "project_info": {
-    "project_number": "110040390264",
-    "firebase_url": "https://business-card-ec918-default-rtdb.europe-west1.firebasedatabase.app/",
-    "project_id": "business-card-ec918",
-    "storage_bucket": "business-card-ec918.appspot.com"
+    "project_number": "24488369423",
+    "firebase_url": "https://socially-app1-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "socially-app1",
+    "storage_bucket": "socially-app1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:110040390264:android:85dff702f9e02ca2536b8d",
+        "mobilesdk_app_id": "1:24488369423:android:0fcf0d83508f08c27d727a",
         "android_client_info": {
-          "package_name": "com.example.business_card"
+          "package_name": "com.example.socially"
         }
       },
       "oauth_client": [
         {
-          "client_id": "110040390264-dssc02m2u90j9vrgg8hq6bq9a8e8vj71.apps.googleusercontent.com",
+          "client_id": "24488369423-frh7clqidjs13lt78qmsn148ahj9bb4l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.business_card",
+            "package_name": "com.example.socially",
             "certificate_hash": "65bf471eb1600662d6987e03bd2a360f1a63c713"
           }
         },
         {
-          "client_id": "110040390264-76ts38vhv7u5r0fcjq5nnmtbp786f8lj.apps.googleusercontent.com",
+          "client_id": "24488369423-kpbh8rc5gub94an63lb28nhd4k7ljdbt.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "GOOGLE_API_KEY_ANDROID"
+          "current_key": "GOOGLE_API_KEY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "110040390264-76ts38vhv7u5r0fcjq5nnmtbp786f8lj.apps.googleusercontent.com",
+              "client_id": "24488369423-5ebs8ciufef57g4e2sb5lgjs48u9upjc.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "110040390264-vtq4he2k8jjltuk1l4nj5d6rh0c7e72p.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.businessCard"
-              }
             }
           ]
         }

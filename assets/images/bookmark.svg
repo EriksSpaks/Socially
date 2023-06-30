@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="29.25" height="29.25" viewBox="0 0 29.25 29.25">
+  <defs>
+    <clipPath id="clip-path">
+      <rect width="29.25" height="29.25" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="bookmark" clip-path="url(#clip-path)">
+    <g transform="translate(-106 -273)">
+      <path id="bookmark-2" data-name="bookmark" d="M25.5,4.5h-15A3.118,3.118,0,0,0,7.515,7.722L7.5,33.5,18,28.667,28.5,33.5V7.722A3.126,3.126,0,0,0,25.5,4.5Zm0,24.167L18,25.154l-7.5,3.512V7.722h15Z" transform="translate(102.5 268.5)" fill="#707070"/>
+      <g id="Rectangle_47" data-name="Rectangle 47" transform="translate(106 273)" fill="rgba(255,255,255,255)" stroke="rgba(112,112,112,0)" stroke-width="1">
+        <rect width="29.25" height="29.25" stroke="none"/>
+        <rect x="0.5" y="0.5" width="28.25" height="28.25" fill="none"/>
+      </g>
+    </g>
+  </g>
+</svg>

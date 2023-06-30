@@ -1,11 +1,8 @@
 // ignore_for_file: prefer_const_constructors
-import 'dart:collection';
-
 import 'package:business_card/pages/additional_pages/add_social_media.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -13,8 +10,9 @@ import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../assets/size.dart';
-import '../../assets/urls.dart';
+import '../../styles/colors.dart';
+import '../../styles/size.dart';
+import '../../styles/urls.dart';
 
 class EditModePage extends StatefulWidget {
   const EditModePage(
@@ -41,20 +39,14 @@ class _EditModePageState extends State<EditModePage> {
     super.initState();
     isReorderable = false;
     setSocialMedia();
-    //setSocialMedia();
   }
 
   @override
   Widget build(BuildContext context) {
     print(isReorderable);
-    return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-        colors: const [Color(0xFFCAE9FB), Color(0xFFE5F4FD)],
-        begin: Alignment.bottomCenter,
-        end: Alignment.topCenter,
-      )),
-      child: SafeArea(
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Column(
@@ -71,7 +63,7 @@ class _EditModePageState extends State<EditModePage> {
                       .getScreenWidthPercentage(0.875),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
+                    color: Colors.white.withOpacity(0.85),
                   ),
                   alignment: Alignment.center,
                   child: Row(
@@ -115,6 +107,7 @@ class _EditModePageState extends State<EditModePage> {
                         width: RelativeSize(context: context)
                             .getScreenWidthPercentage(0.03),
                       ),
+                      Spacer(),
                       if (userSocialMedia!.isNotEmpty)
                         Container(
                           alignment: Alignment.topRight,
@@ -159,6 +152,7 @@ class _EditModePageState extends State<EditModePage> {
           ),
         ),
       ),
+      //  ])),
     );
   }
 
@@ -217,49 +211,55 @@ class _EditModePageState extends State<EditModePage> {
     isReorderable ? setEditedChildren() : setChildren();
     return Expanded(
         child: Stack(children: [
-      ReorderableGridView.count(
-        dragEnabled: isReorderable,
-        onReorder: (oldIndex, newIndex) {
-          setState(() {
-            String old = userSocialMediaAssets.removeAt(oldIndex);
-            userSocialMediaAssets.insert(newIndex, old);
-            String keyToMove = userSocialMedia!.keys.elementAt(oldIndex);
-            String valueToMove = userSocialMedia!.remove(keyToMove);
-            List<MapEntry<String, dynamic>> smList =
-                userSocialMedia!.entries.toList();
-            smList.insert(newIndex, MapEntry(keyToMove, valueToMove));
-            userSocialMedia = Map.fromEntries(smList);
-          });
-        },
-        dragWidgetBuilder: (index, child) {
-          return GestureDetector(
-            key: ValueKey(index),
-            onTap: () => goToUserSocialMedia(index),
-            child: Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                      RelativeSize(context: context)
-                          .getScreenWidthPercentage(0.1)),
-                  image: DecorationImage(
-                      image: AssetImage(userSocialMediaAssets[index])),
-                )),
-          );
-        },
-        padding: EdgeInsets.symmetric(
-            horizontal:
-                RelativeSize(context: context).getScreenWidthPercentage(0.075)),
-        controller: _scrollController,
-        crossAxisCount: 2,
-        childAspectRatio: 1,
-        mainAxisSpacing: !isReorderable
-            ? RelativeSize(context: context).getScreenWidthPercentage(0.075)
-            : 0,
-        crossAxisSpacing: !isReorderable
-            ? RelativeSize(context: context).getScreenWidthPercentage(0.075)
-            : 0,
-        children: children,
-      ),
+      ListView(children: [
+        SizedBox(
+          height:
+              RelativeSize(context: context).getScreenHeightPercentage(0.935),
+          child: ReorderableGridView.count(
+            dragEnabled: isReorderable,
+            onReorder: (oldIndex, newIndex) {
+              setState(() {
+                String old = userSocialMediaAssets.removeAt(oldIndex);
+                userSocialMediaAssets.insert(newIndex, old);
+                String keyToMove = userSocialMedia!.keys.elementAt(oldIndex);
+                String valueToMove = userSocialMedia!.remove(keyToMove);
+                List<MapEntry<String, dynamic>> smList =
+                    userSocialMedia!.entries.toList();
+                smList.insert(newIndex, MapEntry(keyToMove, valueToMove));
+                userSocialMedia = Map.fromEntries(smList);
+              });
+            },
+            dragWidgetBuilder: (index, child) {
+              return GestureDetector(
+                key: ValueKey(index),
+                onTap: () => goToUserSocialMedia(index),
+                child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                          RelativeSize(context: context)
+                              .getScreenWidthPercentage(0.1)),
+                      image: DecorationImage(
+                          image: AssetImage(userSocialMediaAssets[index])),
+                    )),
+              );
+            },
+            padding: EdgeInsets.symmetric(
+                horizontal: RelativeSize(context: context)
+                    .getScreenWidthPercentage(0.075)),
+            controller: _scrollController,
+            crossAxisCount: 2,
+            childAspectRatio: 1,
+            mainAxisSpacing: !isReorderable
+                ? RelativeSize(context: context).getScreenWidthPercentage(0.075)
+                : 0,
+            crossAxisSpacing: !isReorderable
+                ? RelativeSize(context: context).getScreenWidthPercentage(0.075)
+                : 0,
+            children: children,
+          ),
+        ),
+      ]),
       if (isReorderable)
         Positioned(
           bottom: 10,
@@ -278,25 +278,27 @@ class _EditModePageState extends State<EditModePage> {
                 setState(() {
                   isReorderable = false;
                 });
-                final ref = FirebaseDatabase.instance
-                    .ref("users")
-                    .child(user!.uid)
-                    .child("social_media");
-                print(userSocialMedia);
-                await ref.set({});
+
+                final firestoreDatabase = FirebaseFirestore.instance;
+
                 userSocialMedia!.forEach((key, value) async {
-                  await ref.update({
-                    key: {
-                      "position":
-                          userSocialMedia!.keys.toList().indexOf(key) + 1,
-                      "url": value
+                  await firestoreDatabase
+                      .collection("users")
+                      .doc(user!.uid)
+                      .set({
+                    "social_media": {
+                      key: {
+                        "position":
+                            userSocialMedia!.keys.toList().indexOf(key) + 1,
+                        "url": value
+                      }
                     }
-                  });
+                  }, SetOptions(merge: true));
                 });
               },
               child: Text(
                 "Save changes",
-                style: TextStyle(color: Color(0xFF707070), fontSize: 20),
+                style: TextStyle(color: Colouring.colorGrey, fontSize: 20),
               )),
         )
     ]));
@@ -428,27 +430,6 @@ class _EditModePageState extends State<EditModePage> {
     }
   }
 
-  // Future<void> createUserDatabase() async {
-  //   User? user = FirebaseAuth.instance.currentUser;
-  //   final ref = FirebaseDatabase.instance.ref("users");
-  //   //print(user?.uid);
-  //   final event = await ref.get();
-  //   if (user != null) {
-  //     if (event.exists) {
-  //       final ev = await ref.child('${user.uid}/social_media').get();
-  //       print('Not error 3 ');
-  //       if (ev.value != "") {
-  //         print('Not error 4 ');
-  //         userSocialMedia =
-  //             Map<String, dynamic>.from(ev.value as Map<dynamic, dynamic>);
-  //       }
-  //     } else {
-  //       userSocialMedia = {"values": "0"};
-  //       await ref.set({user.uid: "social_media"});
-  //     }
-  //   }
-  // }
-
   Widget getProfilePicture() {
     return user?.photoURL != null
         ? CircleAvatar(
@@ -456,9 +437,9 @@ class _EditModePageState extends State<EditModePage> {
                 RelativeSize(context: context).getScreenWidthPercentage(0.1),
             backgroundImage: CachedNetworkImageProvider(user!.photoURL!),
           )
-        : Icon(CupertinoIcons.person_circle,
+        : Icon(Icons.account_circle_outlined,
             size:
-                RelativeSize(context: context).getScreenWidthPercentage(0.24));
+                RelativeSize(context: context).getScreenWidthPercentage(0.20));
   }
 
   Future<void> goToUserSocialMedia(int index) async {

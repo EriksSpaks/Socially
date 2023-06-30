@@ -18,10 +18,22 @@ class MainPage extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return HomePage(userSocialMedia: userSocialMedia);
-            } else {
-              return LoginPage(userSocialMedia: userSocialMedia);
+              // return HomePage(userSocialMedia: userSocialMedia);
+              if (snapshot.data != null) {
+                snapshot.data!.reload();
+                return StreamBuilder<User?>(
+                    stream: FirebaseAuth.instance.authStateChanges(),
+                    builder: (context, snapshot) {
+                      final user = snapshot.data;
+                      if (user != null && user.displayName != null) {
+                        return HomePage(userSocialMedia: userSocialMedia);
+                      } else {
+                        return LoginPage(userSocialMedia: userSocialMedia);
+                      }
+                    });
+              }
             }
+            return LoginPage(userSocialMedia: userSocialMedia);
           }),
     );
   }
