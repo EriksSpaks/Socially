@@ -1,13 +1,20 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io' show File, Platform;
 
+import 'package:business_card/pages/additional_pages/saved_users.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../assets/size.dart';
+import '../../styles/colors.dart';
+import '../../styles/size.dart';
 import '../login_page.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -21,12 +28,37 @@ class _SettingsPageState extends State<SettingsPage> {
   User? user = FirebaseAuth.instance.currentUser;
   String? imageURL;
   File? file;
+
+  Route<Object> _goToSavedUsersPage() {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => SavedUsers(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1, 0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    imageURL = user!.photoURL;
+  }
+
   @override
   Widget build(BuildContext context) {
-    imageURL = user!.photoURL;
     return SafeArea(
         child: Scaffold(
-      backgroundColor: const Color(0xFFF0F0F0),
+      backgroundColor: Colouring.colorAlmostWhite,
       body: Column(
         children: [
           Container(
@@ -34,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
             height:
                 RelativeSize(context: context).getScreenHeightPercentage(0.275),
             decoration: const BoxDecoration(
-              color: Color(0xFFDDDDDD),
+              color: Colouring.colorLightLightGrey,
             ),
             alignment: Alignment.center,
             child: Column(children: [
@@ -73,14 +105,42 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               Text(
                 user!.displayName!,
-                style: const TextStyle(fontSize: 18, color: Color(0xFF707070)),
+                style:
+                    const TextStyle(fontSize: 18, color: Colouring.colorGrey),
               ),
               Text(
                 user!.email!,
-                style: const TextStyle(color: Color(0xFF707070)),
+                style: const TextStyle(color: Colouring.colorGrey),
               )
             ]),
           ),
+          SizedBox(
+            height:
+                RelativeSize(context: context).getScreenHeightPercentage(0.01),
+          ),
+          ListTile(
+            title: const Text(
+              'Language',
+              style: TextStyle(
+                  color: Colouring.colorGrey,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20),
+            ),
+            leading: SvgPicture.asset(
+              'assets/images/icon_earth.svg',
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'Saved Users',
+              style: TextStyle(
+                  color: Colouring.colorGrey,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20),
+            ),
+            leading: SvgPicture.asset('assets/images/bookmark.svg'),
+            onTap: () => Navigator.of(context).push(_goToSavedUsersPage()),
+          )
         ],
       ),
     ));
@@ -105,7 +165,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           .getScreenWidthPercentage(0.15),
                       backgroundImage: file != null
                           ? FileImage(file!) as ImageProvider
-                          : CachedNetworkImageProvider(imageURL!),
+                          : CachedNetworkImageProvider(imageURL!,
+                              cacheManager: DefaultCacheManager()),
                     ),
                   ),
                   Padding(
@@ -130,7 +191,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Stack(
                 children: [
                   Icon(
-                    CupertinoIcons.person_circle,
+                    Icons.account_circle_outlined,
                     size: RelativeSize(context: context)
                         .getScreenWidthPercentage(0.30),
                     color: Colors.black.withOpacity(0.25),
@@ -149,8 +210,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   )
                 ],
               ),
-              onTap: () => setProfilePicture(),
-            );
+              onTap: () => setState(() {
+                    setProfilePicture();
+                  }));
     }
   }
 
@@ -273,13 +335,16 @@ class _SettingsPageState extends State<SettingsPage> {
                         } finally {
                           await ref.putFile(File(image!.path));
                           await ref.getDownloadURL().then((value) {
-                            setState(() {
-                              imageURL = value;
-                            });
+                            imageURL = value;
+                            FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(user!.uid)
+                                .update({"photoURL": value});
                           });
                           file = File(image.path);
                           await user
                               ?.updatePhotoURL(await ref.getDownloadURL());
+                          setState(() {});
                           Navigator.pop(dialogContext!);
                         }
                       },
@@ -317,13 +382,16 @@ class _SettingsPageState extends State<SettingsPage> {
                         } finally {
                           await ref.putFile(File(image!.path));
                           await ref.getDownloadURL().then((value) {
-                            setState(() {
-                              imageURL = value;
-                            });
+                            imageURL = value;
+                            FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(user!.uid)
+                                .update({"photoURL": value});
                           });
                           file = File(image.path);
                           await user
                               ?.updatePhotoURL(await ref.getDownloadURL());
+                          setState(() {});
                           Navigator.pop(dialogContext!);
                         }
                       },
@@ -336,7 +404,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Route<Object> goToLoginPage() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          const LoginPage(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0, 1);
         const end = Offset.zero;

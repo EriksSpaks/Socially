@@ -1,14 +1,14 @@
 // ignore_for_file: prefer_const_constructors
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:business_card/pages/home_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
-import '../assets/size.dart';
+import '../styles/colors.dart';
+import '../styles/size.dart';
 import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -38,7 +38,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(
-        colors: const [Color(0xFFCAE9FB), Color(0xFFE5F4FD)],
+        colors: const [Colouring.colorGradient1, Colouring.colorGradient2],
         begin: Alignment.bottomCenter,
         end: Alignment.topCenter,
       )),
@@ -57,7 +57,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 "Register",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Color(0xFF707070),
+                  color: Colouring.colorGrey,
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
@@ -93,7 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             height: RelativeSize(context: context)
                                 .getScreenWidthPercentage(0.09),
                             decoration: BoxDecoration(
-                                color: Color(0xFFCAE9FB),
+                                color: Colouring.colorGradient1,
                                 borderRadius: BorderRadius.circular(8)),
                             child: Padding(
                               padding: EdgeInsets.symmetric(
@@ -118,8 +118,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 controller: _firstNameController,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintStyle:
-                                        TextStyle(color: Color(0x55707070)),
+                                    hintStyle: TextStyle(
+                                        color: Colouring.colorTransGrey),
                                     hintText: 'First Name'),
                               ),
                             ),
@@ -153,7 +153,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             height: RelativeSize(context: context)
                                 .getScreenWidthPercentage(0.09),
                             decoration: BoxDecoration(
-                                color: Color(0xFFCAE9FB),
+                                color: Colouring.colorGradient1,
                                 borderRadius: BorderRadius.circular(8)),
                             child: Padding(
                               padding: EdgeInsets.symmetric(
@@ -178,8 +178,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 controller: _lastNameController,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintStyle:
-                                        TextStyle(color: Color(0x55707070)),
+                                    hintStyle: TextStyle(
+                                        color: Colouring.colorTransGrey),
                                     hintText: 'Last name'),
                               ),
                             ),
@@ -225,7 +225,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       height: RelativeSize(context: context)
                           .getScreenWidthPercentage(0.09),
                       decoration: BoxDecoration(
-                          color: Color(0xFFCAE9FB),
+                          color: Colouring.colorGradient1,
                           borderRadius: BorderRadius.circular(8)),
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -262,7 +262,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               vertical: RelativeSize(context: context)
                                   .getScreenHeightPercentage(0.014),
                             ),
-                            hintStyle: TextStyle(color: Color(0x55707070)),
+                            hintStyle:
+                                TextStyle(color: Colouring.colorTransGrey),
                             hintText: 'email'),
                       ),
                     ),
@@ -303,7 +304,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       height: RelativeSize(context: context)
                           .getScreenWidthPercentage(0.09),
                       decoration: BoxDecoration(
-                          color: Color(0xFFCAE9FB),
+                          color: Colouring.colorGradient1,
                           borderRadius: BorderRadius.circular(8)),
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -341,7 +342,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               vertical: RelativeSize(context: context)
                                   .getScreenHeightPercentage(0.014),
                             ),
-                            hintStyle: TextStyle(color: Color(0x55707070)),
+                            hintStyle:
+                                TextStyle(color: Colouring.colorTransGrey),
                             hintText: 'password',
                             suffixIcon: IconButton(
                               alignment: Alignment.centerRight,
@@ -349,7 +351,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               icon: isPasswordHidden
                                   ? Icon(Icons.visibility_off)
                                   : Icon(Icons.visibility),
-                              color: Color(0x55707070),
+                              color: Colouring.colorTransGrey,
                               onPressed: togglePasswordVisibility,
                             )),
                       ),
@@ -391,7 +393,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       height: RelativeSize(context: context)
                           .getScreenWidthPercentage(0.09),
                       decoration: BoxDecoration(
-                          color: Color(0xFFCAE9FB),
+                          color: Colouring.colorGradient1,
                           borderRadius: BorderRadius.circular(8)),
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -429,7 +431,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               vertical: RelativeSize(context: context)
                                   .getScreenHeightPercentage(0.014),
                             ),
-                            hintStyle: TextStyle(color: Color(0x55707070)),
+                            hintStyle:
+                                TextStyle(color: Colouring.colorTransGrey),
                             hintText: 'repeat password',
                             suffixIcon: IconButton(
                               alignment: Alignment.centerRight,
@@ -437,7 +440,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               icon: isPasswordHidden
                                   ? Icon(Icons.visibility_off)
                                   : Icon(Icons.visibility),
-                              color: Color(0x55707070),
+                              color: Colouring.colorTransGrey,
                               onPressed: togglePasswordVisibility,
                             )),
                       ),
@@ -458,9 +461,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(Color(0xFF363DFF)),
-                      overlayColor:
-                          MaterialStateProperty.all(Color(0xFF0007CF)),
+                          MaterialStateProperty.all(Colouring.colorButtonBlue),
+                      overlayColor: MaterialStateProperty.all(
+                          Colouring.colorButtonPressedBlue),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15))),
                       fixedSize: MaterialStateProperty.all(Size(
@@ -474,15 +477,15 @@ class _RegisterPageState extends State<RegisterPage> {
                          * 
                          * 
                          */
-                  onPressed: () {
-                    createUserWithEmailAndPassword();
+                  onPressed: () async {
+                    await createUserWithEmailAndPassword();
                   },
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
                       "Register",
                       style: TextStyle(
-                        color: Color(0xFFFFFFFF),
+                        color: Colouring.colorWhite,
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -501,7 +504,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     "Already have an account? ",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Color(0xFFBBBBBB),
+                      color: Colouring.colorLightGrey,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -512,7 +515,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       " Login now",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Color(0xFF51A0D5),
+                        color: Colouring.colorLightBlue,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -549,12 +552,30 @@ class _RegisterPageState extends State<RegisterPage> {
         result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim());
-        final userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(
-                email: _emailController.text.trim(),
-                password: _passwordController.text.trim());
-        final ref = FirebaseDatabase.instance.ref("users");
-        ref.set({userCredential.user!.uid: "social_media"});
+        User? user = result.user;
+        await user!.updateDisplayName(
+            "${_firstNameController.text.trim()} ${_lastNameController.text.trim()}");
+        await user.reload();
+
+        final firestoreDatabase = FirebaseFirestore.instance;
+
+        await firestoreDatabase.collection("users").doc(user.uid).set({
+          "display_name":
+              "${_firstNameController.text.trim()} ${_lastNameController.text.trim()}",
+          "email": _emailController.text.trim(),
+          "photoURL": "-1",
+          "social_media": {}
+        }, SetOptions(merge: true));
+
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim());
+
+        if (!mounted) return;
+        FocusManager.instance.primaryFocus?.unfocus();
+        if (!mounted) return;
+        Navigator.of(context).pop();
+        Navigator.of(context).push(goToHomePage());
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
           createErrorMessage(
@@ -573,17 +594,6 @@ class _RegisterPageState extends State<RegisterPage> {
         createErrorMessage(e.toString(), ContentType.failure);
         result = null;
       }
-
-      if (result != null) {
-        User? user = result.user;
-        await user?.updateDisplayName(
-            "${_firstNameController.text.trim()} ${_lastNameController.text.trim()}");
-        if (!mounted) return;
-        Navigator.of(context).push(goToHomePage());
-      }
-      FocusManager.instance.primaryFocus?.unfocus();
-      if (!mounted) return;
-      Navigator.of(context).pop();
     } else {
       createErrorMessage("   Passwords don't match.", ContentType.failure);
     }
