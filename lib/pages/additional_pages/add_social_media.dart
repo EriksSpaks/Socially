@@ -1,7 +1,7 @@
-import 'package:business_card/assets/urls.dart';
+import 'package:business_card/styles/size.dart';
+import 'package:business_card/styles/urls.dart';
+import 'package:business_card/styles/colors.dart';
 import 'package:flutter/material.dart';
-import '../../assets/colors.dart';
-import '../../assets/size.dart';
 import 'finish_social_media.dart';
 
 class AddSocialMediaPage extends StatefulWidget {

@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
-import 'package:business_card/assets/size.dart';
+import 'package:business_card/styles/size.dart';
 import 'package:business_card/pages/additional_pages/profile_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,7 +9,7 @@ import 'package:firebase_pagination/firebase_pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../assets/colors.dart';
+import '../../styles/colors.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -19,18 +19,6 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  List bob = [
-    "first",
-    "second",
-    "third",
-    "fourth",
-    "fifth",
-    "first",
-    "second",
-    "third",
-    "fourth",
-    "fifth"
-  ];
   final userEmail = FirebaseAuth.instance.currentUser!.email;
   final TextEditingController _textController = TextEditingController();
 
@@ -38,17 +26,6 @@ class _SearchPageState extends State<SearchPage> {
   void dispose() {
     _textController.dispose();
     super.dispose();
-  }
-
-  Widget getProfilePicture() {
-    return FirebaseAuth.instance.currentUser?.photoURL != null
-        ? CircleAvatar(
-            radius:
-                RelativeSize(context: context).getScreenWidthPercentage(0.1),
-            backgroundImage: CachedNetworkImageProvider(
-                FirebaseAuth.instance.currentUser!.photoURL!),
-          )
-        : Container();
   }
 
   Route<Object> _goToProfilePage(UserInfo userInfo) {
@@ -78,12 +55,6 @@ class _SearchPageState extends State<SearchPage> {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(
-              height: 0,
-              child: Container(
-                child: getProfilePicture(),
-              ),
-            ),
             SizedBox(
               height: RelativeSize(context: context)
                   .getScreenHeightPercentage(0.07),

@@ -2,7 +2,7 @@
 import 'dart:collection';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:business_card/assets/colors.dart';
+import 'package:business_card/styles/colors.dart';
 import 'package:business_card/pages/register_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
@@ -13,7 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../assets/size.dart';
+import '../styles/size.dart';
 import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {

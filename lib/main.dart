@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:business_card/assets/colors.dart';
+import 'package:business_card/styles/colors.dart';
 import 'package:business_card/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';

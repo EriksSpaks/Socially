@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
-import '../assets/colors.dart';
-import '../assets/size.dart';
+import '../styles/colors.dart';
+import '../styles/size.dart';
 import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {

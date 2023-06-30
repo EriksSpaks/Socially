@@ -2,6 +2,7 @@
 
 import 'dart:io' show File, Platform;
 
+import 'package:business_card/pages/additional_pages/saved_users.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,10 +10,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../assets/colors.dart';
-import '../../assets/size.dart';
+import '../../styles/colors.dart';
+import '../../styles/size.dart';
 import '../login_page.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -26,6 +28,24 @@ class _SettingsPageState extends State<SettingsPage> {
   User? user = FirebaseAuth.instance.currentUser;
   String? imageURL;
   File? file;
+
+  Route<Object> _goToSavedUsersPage() {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => SavedUsers(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1, 0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        });
+  }
 
   @override
   void initState() {
@@ -94,6 +114,33 @@ class _SettingsPageState extends State<SettingsPage> {
               )
             ]),
           ),
+          SizedBox(
+            height:
+                RelativeSize(context: context).getScreenHeightPercentage(0.01),
+          ),
+          ListTile(
+            title: const Text(
+              'Language',
+              style: TextStyle(
+                  color: Colouring.colorGrey,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20),
+            ),
+            leading: SvgPicture.asset(
+              'assets/images/icon_earth.svg',
+            ),
+          ),
+          ListTile(
+            title: const Text(
+              'Saved Users',
+              style: TextStyle(
+                  color: Colouring.colorGrey,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20),
+            ),
+            leading: SvgPicture.asset('assets/images/bookmark.svg'),
+            onTap: () => Navigator.of(context).push(_goToSavedUsersPage()),
+          )
         ],
       ),
     ));
