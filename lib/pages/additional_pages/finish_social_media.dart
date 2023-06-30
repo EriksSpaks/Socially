@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
-import '../../assets/colors.dart';
-import '../../assets/size.dart';
+import '../../styles/colors.dart';
+import '../../styles/size.dart';
 import '../home_page.dart';
 
 extension StringExtension on String {

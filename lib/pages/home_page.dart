@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:business_card/assets/colors.dart';
+import 'package:business_card/styles/colors.dart';
 import 'package:business_card/pages/main_pages/edit_mode_page.dart';
 import 'package:business_card/pages/main_pages/search_page.dart';
 import 'package:business_card/pages/main_pages/settings_page.dart';
@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../assets/size.dart';
+import '../styles/size.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -75,22 +75,8 @@ class _HomePageState extends State<HomePage>
     super.dispose();
   }
 
-  Widget getProfilePicture() {
-    return FirebaseAuth.instance.currentUser?.photoURL != null
-        ? CircleAvatar(
-            radius:
-                RelativeSize(context: context).getScreenWidthPercentage(0.1),
-            backgroundImage: CachedNetworkImageProvider(
-                FirebaseAuth.instance.currentUser!.photoURL!),
-          )
-        : Container();
-  }
-
   @override
   Widget build(BuildContext context) {
-    print("$firstConnection 1");
-    print("$userSocialMedia gogogog");
-    getProfilePicture();
     return FutureBuilder(
         future: myFuture,
         builder: (context, snapshot) {
@@ -101,30 +87,114 @@ class _HomePageState extends State<HomePage>
                   builder: (context, isKeyboardVisible) {
                 return Scaffold(
                   resizeToAvoidBottomInset: false,
-                  bottomNavigationBar: Visibility(
-                    visible: !isKeyboardVisible,
-                    maintainState: true,
-                    child: Builder(builder: (context) {
-                      return AnimatedTabBar(
-                        tabs: tabs,
-                        tabController: _tabBarController,
-                      );
-                    }),
-                  ),
-                  body: SafeArea(
-                    child: TabBarView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      controller: _tabBarController,
-                      children: [
-                        const SearchPage(),
-                        EditModePage(
-                          userSocialMedia: userSocialMedia,
-                          firstConnection: firstConnection,
+                  body: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Colors.pink.shade50,
+                            Colors.pink.shade100,
+                            Colors.pink.shade200,
+                            Colors.pink.shade100,
+                            Colors.pink.shade50,
+                          ],
+                          stops: [0.0, 0.2, 0.4, 0.6, 1.0],
                         ),
-                        const SettingsPage(),
-                      ],
-                    ),
-                  ),
+                      ),
+                      child: Stack(children: [
+                        Positioned.fill(
+                          child: ShaderMask(
+                            blendMode: BlendMode.dstIn,
+                            shaderCallback: (bounds) {
+                              return RadialGradient(
+                                center: Alignment.center,
+                                radius: 0.9,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.white.withOpacity(0.6),
+                                ],
+                                stops: [0.2, 1.0],
+                              ).createShader(bounds);
+                            },
+                            child: Container(
+                              color: Colors.transparent,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          left: -100,
+                          top: -100,
+                          child: ShaderMask(
+                            blendMode: BlendMode.dstIn,
+                            shaderCallback: (bounds) {
+                              return RadialGradient(
+                                center: Alignment.center,
+                                radius: 0.6,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.white.withOpacity(0.4),
+                                ],
+                                stops: [0.2, 1.0],
+                              ).createShader(bounds);
+                            },
+                            child: Container(
+                              width: 400,
+                              height: 400,
+                              color: Colors.transparent,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          right: -150,
+                          bottom: -150,
+                          child: ShaderMask(
+                            blendMode: BlendMode.dstIn,
+                            shaderCallback: (bounds) {
+                              return RadialGradient(
+                                center: Alignment.center,
+                                radius: 0.8,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.white.withOpacity(0.5),
+                                ],
+                                stops: [0.2, 1.0],
+                              ).createShader(bounds);
+                            },
+                          ),
+                        ),
+                        Stack(
+                          children: [
+                            SafeArea(
+                              child: TabBarView(
+                                physics: const NeverScrollableScrollPhysics(),
+                                controller: _tabBarController,
+                                children: [
+                                  const SearchPage(),
+                                  EditModePage(
+                                    userSocialMedia: userSocialMedia,
+                                    firstConnection: firstConnection,
+                                  ),
+                                  const SettingsPage(),
+                                ],
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Visibility(
+                                visible: !isKeyboardVisible,
+                                maintainState: true,
+                                child: Builder(builder: (context) {
+                                  return AnimatedTabBar(
+                                    tabs: tabs,
+                                    tabController: _tabBarController,
+                                  );
+                                }),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ])),
                 );
               }),
             );
@@ -138,14 +208,6 @@ class _HomePageState extends State<HomePage>
             )),
           );
         });
-  }
-
-  double getScreenWidthPercentage(double percentage) {
-    return MediaQuery.of(context).size.width * percentage;
-  }
-
-  double getScreenHeightPercentage(double percentage) {
-    return MediaQuery.of(context).size.height * percentage;
   }
 
   Future<void> createUserDatabase() async {
@@ -201,63 +263,82 @@ class _AnimatedTabBarState extends State<AnimatedTabBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.transparent,
-      height: tabHeight,
-      child: Stack(
-        children: [
-          AnimatedAlign(
-            duration: animationDuration,
-            curve: animationCurve,
-            alignment: FractionalOffset(
-                1 / (widget.tabController.length - 1) * tabIndex, 0),
-            child: Container(
-              height: tabHeight,
-              color: Colors.transparent,
-              child: FractionallySizedBox(
-                widthFactor: 1 / widget.tabs.length,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      top: RelativeSize(context: context)
-                          .getScreenHeightPercentage(0.05)),
-                  child: Divider(
-                    color: Colors.black,
-                    thickness: 2,
-                    indent: RelativeSize(context: context)
-                        .getScreenHeightPercentage(0.04),
-                    endIndent: RelativeSize(context: context)
-                        .getScreenHeightPercentage(0.04),
-                  ),
-                ),
-              ),
-            ),
+        margin: EdgeInsets.only(bottom: 20, right: 10, left: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
           ),
-          Row(
-            children: widget.tabs.asMap().entries.map((entry) {
-              final i = entry.key;
-              final tab = entry.value;
-              final isActiveTab = i == tabIndex;
-              return Expanded(
-                  child: GestureDetector(
-                onTap: () => widget.tabController.animateTo(i),
-                child: AnimatedOpacity(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 8.0,
+              spreadRadius: 2.0,
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(
+              RelativeSize(context: context).getScreenHeightPercentage(0.05))),
+          child: Container(
+            color: Colors.white.withOpacity(0.8),
+            height: tabHeight,
+            child: Stack(
+              children: [
+                AnimatedAlign(
                   duration: animationDuration,
                   curve: animationCurve,
-                  opacity: isActiveTab ? 1 : 0.3,
+                  alignment: FractionalOffset(
+                      1 / (widget.tabController.length - 1) * tabIndex, 0),
                   child: Container(
-                    padding: EdgeInsets.only(
-                        top: RelativeSize(context: context)
-                            .getScreenHeightPercentage(0.020)),
-                    alignment: Alignment.topCenter,
                     height: tabHeight,
                     color: Colors.transparent,
-                    child: tab.icon!,
+                    child: FractionallySizedBox(
+                      widthFactor: 1 / widget.tabs.length,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            top: RelativeSize(context: context)
+                                .getScreenHeightPercentage(0.05)),
+                        child: Divider(
+                          color: Colors.black,
+                          thickness: 2,
+                          indent: RelativeSize(context: context)
+                              .getScreenHeightPercentage(0.04),
+                          endIndent: RelativeSize(context: context)
+                              .getScreenHeightPercentage(0.04),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ));
-            }).toList(),
+                Row(
+                  children: widget.tabs.asMap().entries.map((entry) {
+                    final i = entry.key;
+                    final tab = entry.value;
+                    final isActiveTab = i == tabIndex;
+                    return Expanded(
+                        child: GestureDetector(
+                      onTap: () => widget.tabController.animateTo(i),
+                      child: AnimatedOpacity(
+                        duration: animationDuration,
+                        curve: animationCurve,
+                        opacity: isActiveTab ? 1 : 0.3,
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              top: RelativeSize(context: context)
+                                  .getScreenHeightPercentage(0.020)),
+                          alignment: Alignment.topCenter,
+                          height: tabHeight,
+                          color: Colors.transparent,
+                          child: tab.icon!,
+                        ),
+                      ),
+                    ));
+                  }).toList(),
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
-    );
+        ));
   }
 }

@@ -1,26 +1,30 @@
-import 'package:business_card/pages/main_pages/search_page.dart';
+import 'package:business_card/pages/main_pages/search_page.dart' as sp;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:rive/rive.dart' as rive;
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../assets/colors.dart';
-import '../../assets/size.dart';
-import '../../assets/urls.dart';
+import '../../styles/colors.dart';
+import '../../styles/size.dart';
+import '../../styles/urls.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.userInfo});
 
-  final UserInfo userInfo;
+  final sp.UserInfo userInfo;
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  User user = FirebaseAuth.instance.currentUser!;
+  bool isAdded = false;
   late final _userInfo = widget.userInfo;
+  rive.StateMachineController? controller;
   late final future;
   Map<String, dynamic> _userSocialMedia = {};
 
@@ -53,13 +57,11 @@ class _ProfilePageState extends State<ProfilePage> {
   //set a list of users social media assets
   void setSocialMedia() {
     final imageKeys = URLS.socialMediaUrls.keys.toList();
-    if (_userSocialMedia != null) {
-      final userSocialMediaKeys = _userSocialMedia.keys.toList();
-      for (int i = 0; i < userSocialMediaKeys.length; i++) {
-        for (int j = 0; j < imageKeys.length; j++) {
-          if (imageKeys[j].contains(userSocialMediaKeys[i])) {
-            _userSocialMediaAssets.add(URLS.socialMediaUrls.values.toList()[j]);
-          }
+    final userSocialMediaKeys = _userSocialMedia.keys.toList();
+    for (int i = 0; i < userSocialMediaKeys.length; i++) {
+      for (int j = 0; j < imageKeys.length; j++) {
+        if (imageKeys[j].contains(userSocialMediaKeys[i])) {
+          _userSocialMediaAssets.add(URLS.socialMediaUrls.values.toList()[j]);
         }
       }
     }
@@ -81,6 +83,9 @@ class _ProfilePageState extends State<ProfilePage> {
       _userSocialMedia = {"values": "0"};
     }
     setSocialMedia();
+    if (await checkIfAdded()) {
+      _trigger!.fire();
+    }
   }
 
   List<Widget> _setChildren() {
@@ -110,25 +115,58 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  void _saveUser() async {
+    String uid = await _getUID();
+    final firestoreDatabase = FirebaseFirestore.instance;
+    firestoreDatabase.collection("users").doc(user.uid).set({
+      'savedUsers': FieldValue.arrayUnion([uid])
+    }, SetOptions(merge: true));
+  }
+
+  void _unsaveUser() async {
+    String uid = await _getUID();
+    final firestoreDatabase = FirebaseFirestore.instance;
+    firestoreDatabase.collection("users").doc(user.uid).set({
+      'savedUsers': FieldValue.arrayRemove([uid])
+    }, SetOptions(merge: true));
+  }
+
+  Future<bool> checkIfAdded() async {
+    String uid = await _getUID();
+    final firestoreDatabase = FirebaseFirestore.instance;
+    final data =
+        await firestoreDatabase.collection('users').doc(user.uid).get();
+    final list = data.data()!['savedUsers'] as List;
+    return list.contains(uid);
+  }
+
   @override
   void initState() {
     super.initState();
 
-    future = loadSocialMedia();
-
     rootBundle.load('assets/anim/bookmark_1.riv').then((value) async {
       final file = rive.RiveFile.import(value);
       final riveArtboard = file.mainArtboard;
-      var controller =
-          rive.StateMachineController.fromArtboard(riveArtboard, 'State');
+      controller = rive.StateMachineController.fromArtboard(
+        riveArtboard,
+        'State',
+        onStateChange: (stateMachineName, stateName) {
+          if (stateName == 'Add user' && !isAdded) _saveUser();
+          if (stateName == 'Remove user') {
+            _unsaveUser();
+            isAdded = false;
+          }
+        },
+      );
       if (controller != null) {
-        riveArtboard.addController(controller);
-        _trigger = controller.findSMI('add_remove_trigger');
-
-        _trigger = controller.inputs.first as rive.SMITrigger;
+        riveArtboard.addController(controller!);
+        _trigger = controller!.findSMI('add_remove_trigger');
+        _trigger = controller!.inputs.first as rive.SMITrigger;
       }
       setState(() => _riveArtboard = riveArtboard);
     });
+
+    future = loadSocialMedia();
   }
 
   @override
@@ -136,8 +174,6 @@ class _ProfilePageState extends State<ProfilePage> {
     return FutureBuilder<void>(
         future: future,
         builder: (context, snapshot) {
-          print(_userSocialMedia);
-          print(_userSocialMediaAssets);
           return Scaffold(
               body: SafeArea(
             child: Container(
@@ -223,7 +259,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: _riveArtboard == null
                                 ? null
                                 : GestureDetector(
-                                    onTap: () => _trigger!.fire(),
+                                    onTap: () {
+                                      _trigger!.fire();
+                                    },
                                     child: rive.Rive(artboard: _riveArtboard!)),
                           ),
                         )

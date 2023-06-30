@@ -10,9 +10,9 @@ import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../assets/colors.dart';
-import '../../assets/size.dart';
-import '../../assets/urls.dart';
+import '../../styles/colors.dart';
+import '../../styles/size.dart';
+import '../../styles/urls.dart';
 
 class EditModePage extends StatefulWidget {
   const EditModePage(
@@ -44,14 +44,9 @@ class _EditModePageState extends State<EditModePage> {
   @override
   Widget build(BuildContext context) {
     print(isReorderable);
-    return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-        colors: const [Colouring.colorGradient1, Colouring.colorGradient2],
-        begin: Alignment.bottomCenter,
-        end: Alignment.topCenter,
-      )),
-      child: SafeArea(
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Column(
@@ -68,7 +63,7 @@ class _EditModePageState extends State<EditModePage> {
                       .getScreenWidthPercentage(0.875),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    color: Colors.white,
+                    color: Colors.white.withOpacity(0.85),
                   ),
                   alignment: Alignment.center,
                   child: Row(
@@ -157,6 +152,7 @@ class _EditModePageState extends State<EditModePage> {
           ),
         ),
       ),
+      //  ])),
     );
   }
 
@@ -215,49 +211,55 @@ class _EditModePageState extends State<EditModePage> {
     isReorderable ? setEditedChildren() : setChildren();
     return Expanded(
         child: Stack(children: [
-      ReorderableGridView.count(
-        dragEnabled: isReorderable,
-        onReorder: (oldIndex, newIndex) {
-          setState(() {
-            String old = userSocialMediaAssets.removeAt(oldIndex);
-            userSocialMediaAssets.insert(newIndex, old);
-            String keyToMove = userSocialMedia!.keys.elementAt(oldIndex);
-            String valueToMove = userSocialMedia!.remove(keyToMove);
-            List<MapEntry<String, dynamic>> smList =
-                userSocialMedia!.entries.toList();
-            smList.insert(newIndex, MapEntry(keyToMove, valueToMove));
-            userSocialMedia = Map.fromEntries(smList);
-          });
-        },
-        dragWidgetBuilder: (index, child) {
-          return GestureDetector(
-            key: ValueKey(index),
-            onTap: () => goToUserSocialMedia(index),
-            child: Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                      RelativeSize(context: context)
-                          .getScreenWidthPercentage(0.1)),
-                  image: DecorationImage(
-                      image: AssetImage(userSocialMediaAssets[index])),
-                )),
-          );
-        },
-        padding: EdgeInsets.symmetric(
-            horizontal:
-                RelativeSize(context: context).getScreenWidthPercentage(0.075)),
-        controller: _scrollController,
-        crossAxisCount: 2,
-        childAspectRatio: 1,
-        mainAxisSpacing: !isReorderable
-            ? RelativeSize(context: context).getScreenWidthPercentage(0.075)
-            : 0,
-        crossAxisSpacing: !isReorderable
-            ? RelativeSize(context: context).getScreenWidthPercentage(0.075)
-            : 0,
-        children: children,
-      ),
+      ListView(children: [
+        SizedBox(
+          height:
+              RelativeSize(context: context).getScreenHeightPercentage(0.935),
+          child: ReorderableGridView.count(
+            dragEnabled: isReorderable,
+            onReorder: (oldIndex, newIndex) {
+              setState(() {
+                String old = userSocialMediaAssets.removeAt(oldIndex);
+                userSocialMediaAssets.insert(newIndex, old);
+                String keyToMove = userSocialMedia!.keys.elementAt(oldIndex);
+                String valueToMove = userSocialMedia!.remove(keyToMove);
+                List<MapEntry<String, dynamic>> smList =
+                    userSocialMedia!.entries.toList();
+                smList.insert(newIndex, MapEntry(keyToMove, valueToMove));
+                userSocialMedia = Map.fromEntries(smList);
+              });
+            },
+            dragWidgetBuilder: (index, child) {
+              return GestureDetector(
+                key: ValueKey(index),
+                onTap: () => goToUserSocialMedia(index),
+                child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                          RelativeSize(context: context)
+                              .getScreenWidthPercentage(0.1)),
+                      image: DecorationImage(
+                          image: AssetImage(userSocialMediaAssets[index])),
+                    )),
+              );
+            },
+            padding: EdgeInsets.symmetric(
+                horizontal: RelativeSize(context: context)
+                    .getScreenWidthPercentage(0.075)),
+            controller: _scrollController,
+            crossAxisCount: 2,
+            childAspectRatio: 1,
+            mainAxisSpacing: !isReorderable
+                ? RelativeSize(context: context).getScreenWidthPercentage(0.075)
+                : 0,
+            crossAxisSpacing: !isReorderable
+                ? RelativeSize(context: context).getScreenWidthPercentage(0.075)
+                : 0,
+            children: children,
+          ),
+        ),
+      ]),
       if (isReorderable)
         Positioned(
           bottom: 10,
