@@ -1,10 +1,9 @@
 import 'dart:async';
 
+import 'package:business_card/pages/main_pages/qr_page.dart';
 import 'package:business_card/styles/colors.dart';
 import 'package:business_card/pages/main_pages/edit_mode_page.dart';
 import 'package:business_card/pages/main_pages/search_page.dart';
-import 'package:business_card/pages/main_pages/settings_page.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -38,24 +37,34 @@ class _HomePageState extends State<HomePage>
   static List<Tab> tabs = <Tab>[
     Tab(
       icon: SvgPicture.asset(
-        'assets/images/profile_icon.svg',
-        width: 30,
-        height: 30,
-        colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
+        'assets/images/search_icon.svg',
+        width: 33,
+        height: 33,
+        colorFilter:
+            const ColorFilter.mode(Colouring.colorAlmostWhite, BlendMode.srcIn),
         //color: Colors.black,
       ),
     ),
     Tab(
-      icon: SvgPicture.asset('assets/images/edit_mode_icon.svg',
+      icon: SvgPicture.asset('assets/images/profile_icon.svg',
           width: 35,
           height: 35,
-          colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
+          colorFilter: const ColorFilter.mode(
+              Colouring.colorAlmostWhite, BlendMode.srcIn)),
     ),
     Tab(
-      icon: SvgPicture.asset('assets/images/settings_icon.svg',
-          width: 32,
-          height: 32,
-          colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
+      icon: SvgPicture.asset('assets/images/qr_icon.svg',
+          width: 34,
+          height: 34,
+          colorFilter: const ColorFilter.mode(
+              Colouring.colorAlmostWhite, BlendMode.srcIn)),
+    ),
+    Tab(
+      icon: SvgPicture.asset('assets/images/saved_users_icon.svg',
+          width: 33,
+          height: 33,
+          colorFilter: const ColorFilter.mode(
+              Colouring.colorAlmostWhite, BlendMode.srcIn)),
     ),
   ];
 
@@ -75,139 +84,85 @@ class _HomePageState extends State<HomePage>
     super.dispose();
   }
 
+//TODO: GET IMAGES FOR SOCIAL MEDIA FROM DATABASE AND NOT ASSETS FOLDER
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: myFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return WillPopScope(
-              onWillPop: () async => false,
-              child: KeyboardVisibilityBuilder(
-                  builder: (context, isKeyboardVisible) {
-                return Scaffold(
-                  resizeToAvoidBottomInset: false,
-                  body: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Colors.pink.shade50,
-                            Colors.pink.shade100,
-                            Colors.pink.shade200,
-                            Colors.pink.shade100,
-                            Colors.pink.shade50,
-                          ],
-                          stops: [0.0, 0.2, 0.4, 0.6, 1.0],
-                        ),
-                      ),
-                      child: Stack(children: [
-                        Positioned.fill(
-                          child: ShaderMask(
-                            blendMode: BlendMode.dstIn,
-                            shaderCallback: (bounds) {
-                              return RadialGradient(
-                                center: Alignment.center,
-                                radius: 0.9,
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.white.withOpacity(0.6),
-                                ],
-                                stops: [0.2, 1.0],
-                              ).createShader(bounds);
-                            },
-                            child: Container(
-                              color: Colors.transparent,
-                            ),
+    return StatefulBuilder(builder: (context, setState) {
+      return FutureBuilder(
+          future: myFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return PopScope(
+                canPop: false,
+                child: KeyboardVisibilityBuilder(
+                    builder: (context, isKeyboardVisible) {
+                  return Scaffold(
+                    resizeToAvoidBottomInset: false,
+                    body: Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              //#FFE8FC; #FFD2F8
+                              Colouring.colorBlueGradient1,
+                              Colouring.colorBlueGradient2,
+                            ],
+                            stops: [0.0, 1.0],
                           ),
                         ),
-                        Positioned(
-                          left: -100,
-                          top: -100,
-                          child: ShaderMask(
-                            blendMode: BlendMode.dstIn,
-                            shaderCallback: (bounds) {
-                              return RadialGradient(
-                                center: Alignment.center,
-                                radius: 0.6,
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.white.withOpacity(0.4),
-                                ],
-                                stops: [0.2, 1.0],
-                              ).createShader(bounds);
-                            },
-                            child: Container(
-                              width: 400,
-                              height: 400,
-                              color: Colors.transparent,
+                        child: Stack(children: [
+                          SafeArea(
+                            child: TabBarView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              controller: _tabBarController,
+                              children: [
+                                const SearchPage(
+                                  isSavedUsers: false,
+                                ),
+                                EditModePage(
+                                  userSocialMedia: userSocialMedia,
+                                  firstConnection: firstConnection,
+                                  tabcontroller: _tabBarController,
+                                ),
+                                const QrPage(),
+                                const SearchPage(isSavedUsers: true)
+                              ],
                             ),
                           ),
-                        ),
-                        Positioned(
-                          right: -150,
-                          bottom: -150,
-                          child: ShaderMask(
-                            blendMode: BlendMode.dstIn,
-                            shaderCallback: (bounds) {
-                              return RadialGradient(
-                                center: Alignment.center,
-                                radius: 0.8,
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.white.withOpacity(0.5),
-                                ],
-                                stops: [0.2, 1.0],
-                              ).createShader(bounds);
-                            },
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Visibility(
+                              visible: !isKeyboardVisible,
+                              maintainState: true,
+                              child: Builder(builder: (context) {
+                                return AnimatedTabBar(
+                                  tabs: tabs,
+                                  tabController: _tabBarController,
+                                );
+                              }),
+                            ),
                           ),
-                        ),
-                        Stack(
-                          children: [
-                            SafeArea(
-                              child: TabBarView(
-                                physics: const NeverScrollableScrollPhysics(),
-                                controller: _tabBarController,
-                                children: [
-                                  const SearchPage(),
-                                  EditModePage(
-                                    userSocialMedia: userSocialMedia,
-                                    firstConnection: firstConnection,
-                                  ),
-                                  const SettingsPage(),
-                                ],
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Visibility(
-                                visible: !isKeyboardVisible,
-                                maintainState: true,
-                                child: Builder(builder: (context) {
-                                  return AnimatedTabBar(
-                                    tabs: tabs,
-                                    tabController: _tabBarController,
-                                  );
-                                }),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ])),
-                );
-              }),
-            );
-          }
-          return Container(
-            decoration: const BoxDecoration(
+                        ])),
+                  );
+                }),
+              );
+            }
+            return Container(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
-              colors: [Colouring.colorGradient1, Colouring.colorGradient2],
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-            )),
-          );
-        });
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colouring.colorBlueGradient1,
+                    Colouring.colorBlueGradient2,
+                  ],
+                  stops: [0.0, 1.0],
+                ),
+              ),
+            );
+          });
+    });
   }
 
   Future<void> createUserDatabase() async {
@@ -225,9 +180,8 @@ class _HomePageState extends State<HomePage>
             .sort((a, b) => a.value["position"] < b.value["position"] ? -1 : 1);
         userSocialMedia = Map.fromEntries(
             usmList.map((entry) => MapEntry(entry.key, entry.value["url"])));
-        print(userSocialMedia);
       } else {
-        userSocialMedia = {"values": "0"};
+        userSocialMedia = {};
       }
     }
   }
@@ -263,15 +217,21 @@ class _AnimatedTabBarState extends State<AnimatedTabBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(bottom: 20, right: 10, left: 10),
+        margin: EdgeInsets.only(
+            bottom:
+                RelativeSize(context: context).getScreenHeightPercentage(0.025),
+            right:
+                RelativeSize(context: context).getScreenWidthPercentage(0.025),
+            left:
+                RelativeSize(context: context).getScreenWidthPercentage(0.025)),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(double.infinity),
+            topRight: Radius.circular(double.infinity),
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colouring.colorDarkBlue.withOpacity(0.2),
               blurRadius: 8.0,
               spreadRadius: 2.0,
             ),
@@ -281,7 +241,7 @@ class _AnimatedTabBarState extends State<AnimatedTabBar> {
           borderRadius: BorderRadius.all(Radius.circular(
               RelativeSize(context: context).getScreenHeightPercentage(0.05))),
           child: Container(
-            color: Colors.white.withOpacity(0.8),
+            color: Colouring.colorDarkBlue.withOpacity(0.8),
             height: tabHeight,
             child: Stack(
               children: [
@@ -298,14 +258,14 @@ class _AnimatedTabBarState extends State<AnimatedTabBar> {
                       child: Padding(
                         padding: EdgeInsets.only(
                             top: RelativeSize(context: context)
-                                .getScreenHeightPercentage(0.05)),
+                                .getScreenHeightPercentage(0.06)),
                         child: Divider(
-                          color: Colors.black,
+                          color: Colouring.colorAlmostWhite,
                           thickness: 2,
                           indent: RelativeSize(context: context)
-                              .getScreenHeightPercentage(0.04),
+                              .getScreenHeightPercentage(0.0275),
                           endIndent: RelativeSize(context: context)
-                              .getScreenHeightPercentage(0.04),
+                              .getScreenHeightPercentage(0.0275),
                         ),
                       ),
                     ),

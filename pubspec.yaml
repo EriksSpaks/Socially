@@ -17,10 +17,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
-  sdk: '>=2.18.1 <3.0.0'
+  sdk: '>=3.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -28,35 +28,47 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
+
 dependencies:
   flutter:
     sdk: flutter
   firebase_core: ^2.13.1
-  firebase_core_platform_interface: ^4.8.0
+  #firebase_core_platform_interface: ^5.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.`
   google_sign_in: ^6.1.4
-  flutter_inset_box_shadow: ^1.0.8
+  #flutter_inset_box_shadow: ^1.0.8
   flutter_svg: ^2.0.5
   firebase_auth: ^4.6.2
-  awesome_snackbar_content: ^0.1.3
+  #awesome_snackbar_content: ^0.1.3
   form_field_validator: ^1.1.0
-  flutter_facebook_auth: ^5.0.11
-  image_picker: ^0.8.8
+  flutter_facebook_auth: ^6.0.3
+  image_picker: ^1.0.7
   firebase_storage: ^11.2.2
-  firebase_database: ^10.2.2
+  #firebase_database: ^10.2.2
   cached_network_image: ^3.2.3
   url_launcher: ^6.1.11
   reorderable_grid_view: ^2.2.6
-  flutter_keyboard_visibility: ^5.4.1
+  flutter_keyboard_visibility: ^6.0.0
   firebase_pagination: ^3.0.0
-  infinite_scroll_pagination: ^3.2.0
-  cloud_firestore: ^4.8.0
+  #infinite_scroll_pagination: ^4.0.0
+  cloud_firestore: ^4.15.4
   flutter_cache_manager: ^3.3.0
-  rive: ^0.11.3
-  
+  rive: ^0.12.4
+  intl_phone_field: 
+    git:
+      url: https://github.com/EriksSpaks/intl_phone_field.git
+  pinput: ^3.0.1
+  firebase_app_check: ^0.2.1+13
+  pretty_qr_code: ^3.3.0
+  mobile_scanner: ^4.0.1
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.18.1
+  shared_preferences: ^2.2.2
+  dependency_validator: ^3.2.3
 
 dev_dependencies:
   flutter_test:
@@ -67,7 +79,24 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
+  flutter_launcher_icons: "^0.13.1"
+  flutter_native_splash: ^2.3.10
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/9.png"
+
+flutter_native_splash:
+  color: "#043551"
+  image: assets/images/9.png
+  android_12: 
+    image: assets/images/10.png
+    color: "#043551"
+  android: true
+  ios: true
+
   
 
 # For information on the generic Dart part of this file, see the
@@ -75,6 +104,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

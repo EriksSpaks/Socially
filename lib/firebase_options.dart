@@ -50,21 +50,23 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'GOOGLE_API_KEY_ANDROID',
-    appId: '1:110040390264:android:85dff702f9e02ca2536b8d',
-    messagingSenderId: '110040390264',
-    projectId: 'business-card-ec918',
-    storageBucket: 'business-card-ec918.appspot.com',
+    apiKey: 'GOOGLE_API_KEY',
+    appId: '1:24488369423:android:0fcf0d83508f08c27d727a',
+    messagingSenderId: '24488369423',
+    projectId: 'socially-app1',
+    databaseURL: 'https://socially-app1-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'socially-app1.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'GOOGLE_API_KEY_IOS',
-    appId: '1:110040390264:ios:0ca17671aed8c2e8536b8d',
-    messagingSenderId: '110040390264',
-    projectId: 'business-card-ec918',
-    storageBucket: 'business-card-ec918.appspot.com',
-    androidClientId: '110040390264-dssc02m2u90j9vrgg8hq6bq9a8e8vj71.apps.googleusercontent.com',
-    iosClientId: '110040390264-vtq4he2k8jjltuk1l4nj5d6rh0c7e72p.apps.googleusercontent.com',
+    apiKey: 'GOOGLE_API_KEY_RANDOM',
+    appId: '1:24488369423:ios:abb741975cee9b4d7d727a',
+    messagingSenderId: '24488369423',
+    projectId: 'socially-app1',
+    databaseURL: 'https://socially-app1-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'socially-app1.appspot.com',
+    androidClientId: '24488369423-frh7clqidjs13lt78qmsn148ahj9bb4l.apps.googleusercontent.com',
+    iosClientId: '24488369423-ak7q5gibiu2cchj81i9ma8g35ul0eg8r.apps.googleusercontent.com',
     iosBundleId: 'com.example.businessCard',
   );
 }
