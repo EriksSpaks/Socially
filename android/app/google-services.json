@@ -8,18 +8,26 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:24488369423:android:0fcf0d83508f08c27d727a",
+        "mobilesdk_app_id": "1:24488369423:android:ad11d95541e478b27d727a",
         "android_client_info": {
-          "package_name": "com.example.socially"
+          "package_name": "com.socially.business_card"
         }
       },
       "oauth_client": [
         {
-          "client_id": "24488369423-frh7clqidjs13lt78qmsn148ahj9bb4l.apps.googleusercontent.com",
+          "client_id": "24488369423-3dqf86tiftg0ebjsdn46h651uflf8ds4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.socially",
+            "package_name": "com.socially.business_card",
             "certificate_hash": "65bf471eb1600662d6987e03bd2a360f1a63c713"
+          }
+        },
+        {
+          "client_id": "24488369423-aq6t84h1t62t7vgh6np12vvtj00q10gh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.socially.business_card",
+            "certificate_hash": "8f1bec5713e47ea4a1f050a1e6e56ae1b2119cf2"
           }
         },
         {
@@ -38,6 +46,13 @@
             {
               "client_id": "24488369423-5ebs8ciufef57g4e2sb5lgjs48u9upjc.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "24488369423-ak7q5gibiu2cchj81i9ma8g35ul0eg8r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.businessCard"
+              }
             }
           ]
         }

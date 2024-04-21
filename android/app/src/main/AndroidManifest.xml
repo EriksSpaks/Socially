@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.business_card">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.socially.business_card">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <queries>
@@ -12,7 +11,7 @@
     <application
         android:label="Socially"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
 
         <meta-data
            android:name="com.facebook.sdk.ApplicationId"

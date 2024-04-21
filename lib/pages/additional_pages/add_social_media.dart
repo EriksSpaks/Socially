@@ -1,3 +1,4 @@
+import 'package:business_card/language_constants.dart';
 import 'package:business_card/styles/size.dart';
 import 'package:business_card/styles/urls.dart';
 import 'package:business_card/styles/colors.dart';
@@ -43,85 +44,96 @@ class _AddSocialMediaPageState extends State<AddSocialMediaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Colouring.colorLightLightGrey,
-          ),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: [
-              SizedBox(
-                height: RelativeSize(context: context)
-                    .getScreenHeightPercentage(0.035),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    left: RelativeSize(context: context)
-                        .getScreenWidthPercentage(0.075),
-                    right: RelativeSize(context: context)
-                        .getScreenWidthPercentage(0.15)),
-                child: const Text(
-                  "What social media do you want to add?",
-                  style: TextStyle(
-                      fontSize: 24,
-                      color: Colouring.colorGrey,
-                      fontWeight: FontWeight.w600),
+      body: Container(
+        color: Colouring.colorDarkBlue,
+        child: SafeArea(
+          child: Container(
+            color: Colouring.colorDarkBlue,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: RelativeSize(context: context)
+                      .getScreenHeightPercentage(0.035),
                 ),
-              ),
-              SizedBox(
-                height: RelativeSize(context: context)
-                    .getScreenHeightPercentage(0.035),
-              ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colouring.colorAlmostWhite,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(
-                              RelativeSize(context: context)
-                                  .getScreenWidthPercentage(0.1)),
-                          topRight: Radius.circular(
-                              RelativeSize(context: context)
-                                  .getScreenWidthPercentage(0.1)))),
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverPadding(
-                        padding: EdgeInsets.all(RelativeSize(context: context)
-                            .getScreenWidthPercentage(0.075)),
-                        sliver: SliverGrid(
-                            delegate: SliverChildBuilderDelegate((context,
-                                index) {
-                              return GestureDetector(
-                                onTap: () => addSocialMedia(
-                                    additionalSocialMediaNames[index]),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                          RelativeSize(context: context)
-                                              .getScreenWidthPercentage(0.1)),
-                                      image: DecorationImage(
-                                          image: AssetImage(
-                                              additionalSocialMedia[index]))),
-                                ),
-                              );
-                            }, childCount: additionalSocialMedia.length),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    mainAxisSpacing:
-                                        RelativeSize(context: context)
-                                            .getScreenWidthPercentage(0.075),
-                                    crossAxisSpacing:
-                                        RelativeSize(context: context)
-                                            .getScreenWidthPercentage(0.075))),
-                      ),
-                    ],
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: RelativeSize(context: context)
+                          .getScreenWidthPercentage(0.075),
+                      right: RelativeSize(context: context)
+                          .getScreenWidthPercentage(0.15)),
+                  child: Text(
+                    translatedText(context).add_sm_screen_text,
+                    style: const TextStyle(
+                        fontSize: 24,
+                        color: Colouring.colorAlmostWhite,
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: RelativeSize(context: context)
+                      .getScreenHeightPercentage(0.035),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                            colors: [
+                              Color(0xFF033D5E),
+                              Colouring.colorBlueGradient2
+                            ],
+                            stops: [
+                              0,
+                              1
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(
+                                RelativeSize(context: context)
+                                    .getScreenWidthPercentage(0.1)),
+                            topRight: Radius.circular(
+                                RelativeSize(context: context)
+                                    .getScreenWidthPercentage(0.1)))),
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverPadding(
+                          padding: EdgeInsets.all(RelativeSize(context: context)
+                              .getScreenWidthPercentage(0.075)),
+                          sliver: SliverGrid(
+                              delegate:
+                                  SliverChildBuilderDelegate((context, index) {
+                                return GestureDetector(
+                                  onTap: () => addSocialMedia(
+                                      additionalSocialMediaNames[index]),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            RelativeSize(context: context)
+                                                .getScreenWidthPercentage(0.1)),
+                                        image: DecorationImage(
+                                            image: AssetImage(
+                                                additionalSocialMedia[index]))),
+                                  ),
+                                );
+                              }, childCount: additionalSocialMedia.length),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      mainAxisSpacing:
+                                          RelativeSize(context: context)
+                                              .getScreenWidthPercentage(0.075),
+                                      crossAxisSpacing: RelativeSize(
+                                              context: context)
+                                          .getScreenWidthPercentage(0.075))),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
