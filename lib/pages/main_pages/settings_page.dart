@@ -2,7 +2,10 @@
 
 import 'dart:io' show File, Platform;
 
-import 'package:business_card/pages/additional_pages/saved_users.dart';
+import 'package:business_card/language_constants.dart';
+import 'package:business_card/pages/additional_pages/bob.dart';
+import 'package:business_card/pages/additional_pages/edit_profile_name.dart';
+import 'package:business_card/pages/additional_pages/switch_language.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +18,6 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../styles/colors.dart';
 import '../../styles/size.dart';
-import '../login_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -29,24 +31,6 @@ class _SettingsPageState extends State<SettingsPage> {
   String? imageURL;
   File? file;
 
-  Route<Object> _goToSavedUsersPage() {
-    return PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => SavedUsers(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1, 0);
-          const end = Offset.zero;
-          const curve = Curves.easeInOut;
-
-          final tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -56,101 +40,274 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      backgroundColor: Colouring.colorAlmostWhite,
-      body: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            height:
-                RelativeSize(context: context).getScreenHeightPercentage(0.275),
-            decoration: const BoxDecoration(
-              color: Colouring.colorLightLightGrey,
-            ),
-            alignment: Alignment.center,
-            child: Column(children: [
-              Container(
-                alignment: Alignment.centerRight,
-                child: PopupMenuButton(
-                    icon: const Icon(Icons.more_vert),
-                    itemBuilder: (context) => [
-                          PopupMenuItem<int>(
-                            value: 0,
-                            padding: EdgeInsets.symmetric(
-                                horizontal:
-                                    MediaQuery.of(context).size.width * 0.025),
-                            child: Row(
-                              children: const [
-                                Text("Log out"),
-                                Spacer(),
-                                Icon(Icons.logout_rounded)
-                              ],
-                            ),
-                            onTap: () async {
-                              await Future.delayed(
-                                  const Duration(milliseconds: 500));
-                              await FirebaseAuth.instance.signOut();
-                              Navigator.of(context).push(goToLoginPage());
-                            },
+    return Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colouring.colorBlueGradient1,
+              Colouring.colorBlueGradient2,
+            ],
+            stops: [0.0, 1.0],
+          ),
+        ),
+        child: SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: RelativeSize(context: context)
+                          .getScreenHeightPercentage(0.015)),
+                  child: Container(
+                    width: RelativeSize(context: context)
+                            .getScreenWidthPercentage(1) -
+                        RelativeSize(context: context)
+                            .getScreenHeightPercentage(0.03),
+                    height: RelativeSize(context: context)
+                        .getScreenHeightPercentage(0.275),
+                    decoration: BoxDecoration(
+                        color: Colouring.colorDarkBlue,
+                        borderRadius: BorderRadius.all(Radius.circular(
+                            RelativeSize(context: context)
+                                .getScreenHeightPercentage(0.03)))),
+                    alignment: Alignment.center,
+                    child: Column(children: [
+                      SizedBox(
+                        height: RelativeSize(context: context)
+                            .getScreenHeightPercentage(0.025),
+                      ),
+                      Container(
+                        child: getProfilePicture(),
+                      ),
+                      SizedBox(
+                        height: RelativeSize(context: context)
+                            .getScreenHeightPercentage(0.01),
+                      ),
+                      Text(
+                        user!.displayName!,
+                        style: const TextStyle(
+                            fontSize: 18, color: Colouring.colorAlmostWhite),
+                      ),
+                    ]),
+                  ),
+                ),
+                SizedBox(
+                  height: RelativeSize(context: context)
+                      .getScreenHeightPercentage(0.025),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(_goToLanguagePage());
+                  },
+                  style: ButtonStyle(
+                      elevation: MaterialStateProperty.all(0),
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.transparent),
+                      overlayColor:
+                          MaterialStateProperty.all(Colouring.colorDarkBlue),
+                      fixedSize: MaterialStateProperty.all(Size(
+                          double.infinity,
+                          RelativeSize(context: context)
+                              .getScreenHeightPercentage(0.06))),
+                      shape: MaterialStateProperty.all(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero, // No rounded borders
+                          // Border color with opacity
+                        ),
+                      )),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: RelativeSize(context: context)
+                            .getScreenWidthPercentage(0.025),
+                        right: RelativeSize(context: context)
+                            .getScreenWidthPercentage(0.075)),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/images/icon_earth.svg',
+                          colorFilter: const ColorFilter.mode(
+                              Colouring.colorAlmostWhite, BlendMode.srcIn),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: RelativeSize(context: context)
+                                  .getScreenWidthPercentage(0.0725)),
+                          child: Text(
+                            translatedText(context).language,
+                            style: const TextStyle(
+                                color: Colouring.colorAlmostWhite,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500),
                           ),
-                        ]),
-              ),
-              Container(
-                child: getProfilePicture(),
-              ),
-              SizedBox(
-                height: RelativeSize(context: context)
-                    .getScreenHeightPercentage(0.01),
-              ),
-              Text(
-                user!.displayName!,
-                style:
-                    const TextStyle(fontSize: 18, color: Colouring.colorGrey),
-              ),
-              Text(
-                user!.email!,
-                style: const TextStyle(color: Colouring.colorGrey),
-              )
-            ]),
-          ),
-          SizedBox(
-            height:
-                RelativeSize(context: context).getScreenHeightPercentage(0.01),
-          ),
-          ListTile(
-            title: const Text(
-              'Language',
-              style: TextStyle(
-                  color: Colouring.colorGrey,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(_goToEditProfileNamePage())
+                        .then((value) => setState(() {
+                              user = FirebaseAuth.instance.currentUser!;
+                            }));
+                  },
+                  style: ButtonStyle(
+                      elevation: MaterialStateProperty.all(0),
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.transparent),
+                      overlayColor:
+                          MaterialStateProperty.all(Colouring.colorDarkBlue),
+                      fixedSize: MaterialStateProperty.all(Size(
+                          double.infinity,
+                          RelativeSize(context: context)
+                              .getScreenHeightPercentage(0.06))),
+                      shape: MaterialStateProperty.all(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero, // No rounded borders
+                          // Border color with opacity
+                        ),
+                      )),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: RelativeSize(context: context)
+                          .getScreenWidthPercentage(0.025),
+                    ),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/images/icon_edit_profile.svg',
+                          colorFilter: const ColorFilter.mode(
+                              Colouring.colorAlmostWhite, BlendMode.srcIn),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: RelativeSize(context: context)
+                                  .getScreenWidthPercentage(0.0825)),
+                          child: Text(
+                            translatedText(context).edit_profile_name,
+                            style: const TextStyle(
+                                color: Colouring.colorAlmostWhite,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                /*ElevatedButton(
+                  onPressed: () {
+                    //TODO: switch to light theme
+                  },
+                  style: ButtonStyle(
+                      elevation: MaterialStateProperty.all(0),
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.transparent),
+                      overlayColor:
+                          MaterialStateProperty.all(Colouring.colorDarkBlue),
+                      fixedSize: MaterialStateProperty.all(Size(
+                          double.infinity,
+                          RelativeSize(context: context)
+                              .getScreenHeightPercentage(0.06))),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero, // No rounded borders
+                          // Border color with opacity
+                        ),
+                      )),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: RelativeSize(context: context)
+                            .getScreenWidthPercentage(0.02),
+                        right: RelativeSize(context: context)
+                            .getScreenWidthPercentage(0.075)),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/images/icon_switch_to_light.svg',
+                          colorFilter: const ColorFilter.mode(
+                              Colouring.colorAlmostWhite, BlendMode.srcIn),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: RelativeSize(context: context)
+                                  .getScreenWidthPercentage(0.075)),
+                          child: Text(
+                            "Switch to light theme",
+                            style: TextStyle(
+                                color: Colouring.colorAlmostWhite,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),*/
+                ElevatedButton(
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.of(context).push(_goToLoginPage());
+                  },
+                  style: ButtonStyle(
+                      elevation: MaterialStateProperty.all(0),
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.transparent),
+                      overlayColor:
+                          MaterialStateProperty.all(Colouring.colorDarkBlue),
+                      fixedSize: MaterialStateProperty.all(Size(
+                          double.infinity,
+                          RelativeSize(context: context)
+                              .getScreenHeightPercentage(0.06))),
+                      shape: MaterialStateProperty.all(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero, // No rounded borders
+                          // Border color with opacity
+                        ),
+                      )),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: RelativeSize(context: context)
+                          .getScreenWidthPercentage(0.0325),
+                    ),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/images/icon_log_out.svg',
+                          colorFilter: const ColorFilter.mode(
+                              Colouring.colorAlmostWhite, BlendMode.srcIn),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: RelativeSize(context: context)
+                                  .getScreenWidthPercentage(0.06)),
+                          child: Text(
+                            translatedText(context).log_out,
+                            style: const TextStyle(
+                                color: Colouring.colorAlmostWhite,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-            leading: SvgPicture.asset(
-              'assets/images/icon_earth.svg',
-            ),
           ),
-          ListTile(
-            title: const Text(
-              'Saved Users',
-              style: TextStyle(
-                  color: Colouring.colorGrey,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20),
-            ),
-            leading: SvgPicture.asset('assets/images/bookmark.svg'),
-            onTap: () => Navigator.of(context).push(_goToSavedUsersPage()),
-          )
-        ],
-      ),
-    ));
+        ));
   }
 
   getProfilePicture() {
     if (user!.providerData[0].providerId.toLowerCase().contains('google') ||
         user!.providerData[0].providerId.toLowerCase().contains('facebook')) {
       return CircleAvatar(
-        radius: RelativeSize(context: context).getScreenWidthPercentage(0.15),
+        radius: RelativeSize(context: context).getScreenWidthPercentage(0.185),
         backgroundImage: CachedNetworkImageProvider(user!.photoURL!),
       );
     } else {
@@ -162,7 +319,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     opacity: 0.5,
                     child: CircleAvatar(
                       radius: RelativeSize(context: context)
-                          .getScreenWidthPercentage(0.15),
+                          .getScreenWidthPercentage(0.185),
                       backgroundImage: file != null
                           ? FileImage(file!) as ImageProvider
                           : CachedNetworkImageProvider(imageURL!,
@@ -172,9 +329,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   Padding(
                     padding: EdgeInsets.only(
                         top: RelativeSize(context: context)
-                            .getScreenHeightPercentage(0.03),
+                            .getScreenHeightPercentage(0.05),
                         left: RelativeSize(context: context)
-                            .getScreenWidthPercentage(0.055)),
+                            .getScreenWidthPercentage(0.1)),
                     child: Icon(
                       Icons.add_a_photo,
                       size: RelativeSize(context: context)
@@ -193,19 +350,20 @@ class _SettingsPageState extends State<SettingsPage> {
                   Icon(
                     Icons.account_circle_outlined,
                     size: RelativeSize(context: context)
-                        .getScreenWidthPercentage(0.30),
-                    color: Colors.black.withOpacity(0.25),
+                        .getScreenWidthPercentage(0.37),
+                    color: Colors.white.withOpacity(0.25),
                   ),
                   Padding(
                     padding: EdgeInsets.only(
                         top: RelativeSize(context: context)
-                            .getScreenHeightPercentage(0.04),
+                            .getScreenHeightPercentage(0.05),
                         left: RelativeSize(context: context)
-                            .getScreenWidthPercentage(0.09)),
+                            .getScreenWidthPercentage(0.12)),
                     child: Icon(
                       Icons.add_a_photo,
+                      color: Colouring.colorAlmostWhite,
                       size: RelativeSize(context: context)
-                          .getScreenHeightPercentage(0.05),
+                          .getScreenHeightPercentage(0.06),
                     ),
                   )
                 ],
@@ -256,7 +414,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           Navigator.pop(dialogContext!);
                         }
                       },
-                      child: const Text("Camera")),
+                      child: Text(
+                          translatedText(context).change_profile_pic_camera)),
                   CupertinoActionSheetAction(
                       onPressed: () async {
                         BuildContext? dialogContext;
@@ -291,7 +450,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           Navigator.pop(dialogContext!);
                         }
                       },
-                      child: const Text("Gallery")),
+                      child: Text(
+                          translatedText(context).change_profile_pic_gallery)),
                 ],
               ));
     } else {
@@ -309,7 +469,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                 .getScreenHeightPercentage(0.01)),
                         child: const Icon(Icons.camera_alt),
                       ),
-                      title: const Text("Camera"),
+                      title: Text(
+                          translatedText(context).change_profile_pic_camera),
                       visualDensity: const VisualDensity(
                           vertical: VisualDensity.maximumDensity),
                       onTap: () async {
@@ -356,7 +517,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                 .getScreenHeightPercentage(0.01)),
                         child: const Icon(Icons.photo_album),
                       ),
-                      title: const Text("Gallery"),
+                      title: Text(
+                          translatedText(context).change_profile_pic_gallery),
                       visualDensity: const VisualDensity(
                           vertical: VisualDensity.maximumDensity),
                       onTap: () async {
@@ -404,8 +566,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Route<Object> goToLoginPage() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          const LoginPage(),
+      pageBuilder: (context, animation, secondaryAnimation) => const BOB(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0, 1);
         const end = Offset.zero;
@@ -419,5 +580,61 @@ class _SettingsPageState extends State<SettingsPage> {
         );
       },
     );
+  }
+
+  Route<Object> _goToLanguagePage() {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const LanguageScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1, 0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        });
+  }
+
+  Route<Object?> _goToLoginPage() {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => const BOB(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0, 1);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        });
+  }
+
+  Route<Object?> _goToEditProfileNamePage() {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const EditProfileNamePage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1, 0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        });
   }
 }

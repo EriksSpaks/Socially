@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:business_card/pages/main_pages/search_page.dart' as sp;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,18 +30,9 @@ class _ProfilePageState extends State<ProfilePage> {
   late final future;
   Map<String, dynamic> _userSocialMedia = {};
 
-  List _userSocialMediaAssets = [];
+  final List _userSocialMediaAssets = [];
   rive.Artboard? _riveArtboard;
   rive.SMITrigger? _trigger;
-
-  Future<String> _getUID() async {
-    final query = await FirebaseFirestore.instance
-        .collection("users")
-        .where("email", isEqualTo: _userInfo.email)
-        .get();
-    print(query.docs[0].id);
-    return query.docs[0].id;
-  }
 
   Widget getProfilePicture() {
     return _userInfo.photoURL != "-1"
@@ -50,6 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 cacheManager: DefaultCacheManager()),
           )
         : Icon(Icons.account_circle_outlined,
+            color: Colouring.colorAlmostWhite,
             size:
                 RelativeSize(context: context).getScreenWidthPercentage(0.20));
   }
@@ -68,9 +62,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> loadSocialMedia() async {
-    String uid = await _getUID();
-    final snapshot =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_userInfo.uid)
+        .get();
     final data = snapshot.data()!["social_media"];
     if (data.isNotEmpty) {
       final userSM = Map<String, dynamic>.from(data);
@@ -93,7 +88,6 @@ class _ProfilePageState extends State<ProfilePage> {
       return GestureDetector(
         onTap: () => goToUserSocialMedia(index),
         child: Container(
-            padding: EdgeInsets.all(5),
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
@@ -116,40 +110,38 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _saveUser() async {
-    String uid = await _getUID();
     final firestoreDatabase = FirebaseFirestore.instance;
     firestoreDatabase.collection("users").doc(user.uid).set({
-      'savedUsers': FieldValue.arrayUnion([uid])
+      'savedUsers': FieldValue.arrayUnion([_userInfo.uid])
     }, SetOptions(merge: true));
   }
 
   void _unsaveUser() async {
-    String uid = await _getUID();
     final firestoreDatabase = FirebaseFirestore.instance;
     firestoreDatabase.collection("users").doc(user.uid).set({
-      'savedUsers': FieldValue.arrayRemove([uid])
+      'savedUsers': FieldValue.arrayRemove([_userInfo.uid])
     }, SetOptions(merge: true));
   }
 
   Future<bool> checkIfAdded() async {
-    String uid = await _getUID();
     final firestoreDatabase = FirebaseFirestore.instance;
     final data =
         await firestoreDatabase.collection('users').doc(user.uid).get();
     final list = data.data()!['savedUsers'] as List;
-    return list.contains(uid);
+    return list.contains(_userInfo.uid);
   }
 
   @override
   void initState() {
     super.initState();
 
-    rootBundle.load('assets/anim/bookmark_1.riv').then((value) async {
+    rootBundle.load('assets/anim/bookmark.riv').then((value) async {
       final file = rive.RiveFile.import(value);
       final riveArtboard = file.mainArtboard;
       controller = rive.StateMachineController.fromArtboard(
         riveArtboard,
-        'State',
+        //'State' 'State1' = black
+        'State Machine 1',
         onStateChange: (stateMachineName, stateName) {
           if (stateName == 'Add user' && !isAdded) _saveUser();
           if (stateName == 'Remove user') {
@@ -174,120 +166,124 @@ class _ProfilePageState extends State<ProfilePage> {
     return FutureBuilder<void>(
         future: future,
         builder: (context, snapshot) {
-          return Scaffold(
-              body: SafeArea(
-            child: Container(
+          return PopScope(
+            canPop: true,
+            onPopInvoked: (didPop) {
+              setState(() {});
+            },
+            child: Scaffold(
+                body: Container(
               decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                colors: [Colouring.colorGradient1, Colouring.colorGradient2],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-              )),
-              child: Column(children: [
-                SizedBox(
-                  height: RelativeSize(context: context)
-                      .getScreenHeightPercentage(0.03),
-                ),
-                Center(
-                  child: Container(
+                gradient: LinearGradient(colors: [
+                  Colouring.colorBlueGradient1,
+                  Colouring.colorBlueGradient2
+                ], stops: [
+                  0.0,
+                  1.0
+                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+              ),
+              child: SafeArea(
+                child: Column(children: [
+                  SizedBox(
                     height: RelativeSize(context: context)
-                        .getScreenHeightPercentage(0.15),
-                    width: RelativeSize(context: context)
-                        .getScreenWidthPercentage(0.875),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.white,
-                    ),
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.only(
-                              left: RelativeSize(context: context)
-                                  .getScreenWidthPercentage(0.05)),
-                          child: getProfilePicture(),
-                        ),
-                        SizedBox(
-                          width: RelativeSize(context: context)
-                              .getScreenWidthPercentage(0.05),
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.only(
-                              top: RelativeSize(context: context)
-                                  .getScreenHeightPercentage(0.055)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: RelativeSize(context: context)
-                                    .getScreenWidthPercentage(0.35),
-                                height: RelativeSize(context: context)
-                                    .getScreenHeightPercentage(0.025),
-                                child: Text(
-                                  _userInfo.displayName,
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 16),
+                        .getScreenHeightPercentage(0.03),
+                  ),
+                  Center(
+                    child: Container(
+                      height: RelativeSize(context: context)
+                          .getScreenHeightPercentage(0.15),
+                      width: RelativeSize(context: context)
+                          .getScreenWidthPercentage(0.875),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colouring.colorDarkBlue,
+                      ),
+                      alignment: Alignment.center,
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(
+                                left: RelativeSize(context: context)
+                                    .getScreenWidthPercentage(0.05)),
+                            child: getProfilePicture(),
+                          ),
+                          SizedBox(
+                            width: RelativeSize(context: context)
+                                .getScreenWidthPercentage(0.05),
+                          ),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.only(
+                                top: RelativeSize(context: context)
+                                    .getScreenHeightPercentage(0.055)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: RelativeSize(context: context)
+                                      .getScreenWidthPercentage(0.35),
+                                  height: RelativeSize(context: context)
+                                      .getScreenHeightPercentage(0.025),
+                                  child: Text(
+                                    _userInfo.displayName,
+                                    style: const TextStyle(
+                                        color: Colouring.colorAlmostWhite,
+                                        fontSize: 16),
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: RelativeSize(context: context)
-                                    .getScreenHeightPercentage(0.01),
-                              ),
-                              Text(
-                                _userInfo.email,
-                                style: const TextStyle(
-                                    color: Color(0x55000000), fontSize: 12),
-                              )
-                            ],
+                                SizedBox(
+                                  height: RelativeSize(context: context)
+                                      .getScreenHeightPercentage(0.01),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          width: RelativeSize(context: context)
-                              .getScreenWidthPercentage(0.03),
-                        ),
-                        const Spacer(),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: RelativeSize(context: context)
-                                  .getScreenHeightPercentage(0.02),
-                              right: RelativeSize(context: context)
-                                  .getScreenWidthPercentage(0.01)),
-                          child: SizedBox(
-                            height: 50,
-                            width: 50,
-                            child: _riveArtboard == null
-                                ? null
-                                : GestureDetector(
-                                    onTap: () {
-                                      _trigger!.fire();
-                                    },
-                                    child: rive.Rive(artboard: _riveArtboard!)),
+                          SizedBox(
+                            width: RelativeSize(context: context)
+                                .getScreenWidthPercentage(0.03),
                           ),
-                        )
-                      ],
+                          const Spacer(),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                right: RelativeSize(context: context)
+                                    .getScreenWidthPercentage(0.01)),
+                            child: SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: _riveArtboard == null
+                                  ? null
+                                  : GestureDetector(
+                                      onTap: () {
+                                        _trigger!.fire();
+                                      },
+                                      child:
+                                          rive.Rive(artboard: _riveArtboard!)),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                    height: RelativeSize(context: context)
-                        .getScreenHeightPercentage(0.025)),
-                GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 2,
-                  childAspectRatio: 1,
-                  mainAxisSpacing: RelativeSize(context: context)
-                      .getScreenWidthPercentage(0.075),
-                  crossAxisSpacing: RelativeSize(context: context)
-                      .getScreenWidthPercentage(0.075),
-                  padding: EdgeInsets.symmetric(
-                      horizontal: RelativeSize(context: context)
-                          .getScreenWidthPercentage(0.075)),
-                  children: _setChildren(),
-                )
-              ]),
-            ),
-          ));
+                  SizedBox(
+                      height: RelativeSize(context: context)
+                          .getScreenHeightPercentage(0.025)),
+                  GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 2,
+                    childAspectRatio: 1,
+                    mainAxisSpacing: RelativeSize(context: context)
+                        .getScreenWidthPercentage(0.075),
+                    crossAxisSpacing: RelativeSize(context: context)
+                        .getScreenWidthPercentage(0.075),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: RelativeSize(context: context)
+                            .getScreenWidthPercentage(0.075)),
+                    children: _setChildren(),
+                  )
+                ]),
+              ),
+            )),
+          );
         });
   }
 }

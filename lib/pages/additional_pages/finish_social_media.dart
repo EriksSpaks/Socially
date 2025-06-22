@@ -1,3 +1,4 @@
+import 'package:business_card/language_constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -35,10 +36,11 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: Container(
-        decoration: const BoxDecoration(color: Colouring.colorLightLightGrey),
+        decoration: const BoxDecoration(color: Colouring.colorDarkBlue),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Column(children: [
@@ -56,7 +58,7 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
               style: const TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.w600,
-                  color: Colouring.colorGrey),
+                  color: Colouring.colorAlmostWhite),
             ),
           ),
           SizedBox(
@@ -68,7 +70,13 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
             child: Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                    color: Colouring.colorAlmostWhite,
+                    gradient: const LinearGradient(colors: [
+                      Color(0xFF033D5E),
+                      Colouring.colorBlueGradient2
+                    ], stops: [
+                      0,
+                      1
+                    ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(RelativeSize(context: context)
                             .getScreenWidthPercentage(0.1)),
@@ -78,10 +86,9 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
                   Padding(
                     padding: EdgeInsets.all(RelativeSize(context: context)
                         .getScreenWidthPercentage(0.075)),
-                    child: const Text(
-                        "Provide the link to your account to a selected social media:",
-                        style: TextStyle(
-                            color: Colouring.colorGrey, fontSize: 20)),
+                    child: Text(translatedText(context).finish_sm_screen_text,
+                        style: const TextStyle(
+                            color: Colouring.colorAlmostWhite, fontSize: 20)),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -113,22 +120,30 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
                               horizontal: RelativeSize(context: context)
                                   .getScreenWidthPercentage(0.05)),
                           child: TextFormField(
+                            cursorColor: Colouring.colorGrey,
                             controller: linkController,
                             textAlignVertical: TextAlignVertical.center,
+                            //style: TextStyle(color: Colors.green),
                             validator: MultiValidator([
                               PatternValidator(
                                   r'(([\w]+:)?//)?(([\d\w]|%[a-fA-f\d]{2,2})+(:([\d\w]|%[a-fA-f\d]{2,2})+)?@)?([\d\w][-\d\w]{0,253}[\d\w]\.)+[\w]{2,63}(:[\d]+)?(/([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)*(\?(&?([-+_~.\d\w]|%[a-fA-f\d]{2,2})=?)*)?(#([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)?',
-                                  errorText: "Provided link is invalid"),
+                                  errorText: translatedText(context)
+                                      .finish_sm_screen_error_invalid_link),
                               RequiredValidator(
-                                  errorText: "This field is required")
-                            ]),
+                                  errorText: translatedText(context)
+                                      .finish_sm_screen_error_required_field)
+                            ]).call,
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             keyboardType: TextInputType.url,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
+                                errorStyle: const TextStyle(
+                                    color: Colors.redAccent,
+                                    fontWeight: FontWeight.w600),
                                 isDense: false,
                                 border: InputBorder.none,
-                                hintText: "Link to your account"),
+                                hintText: translatedText(context)
+                                    .finish_sm_screen_hintText),
                           ),
                         ),
                       ],
@@ -136,17 +151,17 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
                   ),
                   SizedBox(
                     height: RelativeSize(context: context)
-                        .getScreenHeightPercentage(0.5),
+                        .getScreenHeightPercentage(0.45),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
                           style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colouring.colorWhite),
-                            overlayColor:
-                                MaterialStateProperty.all(Colouring.colorWhite),
+                            backgroundColor: MaterialStateProperty.all(
+                                const Color(0xFFFAFAFA)),
+                            overlayColor: MaterialStateProperty.all(
+                                Colouring.colorLightGrey),
                             shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20))),
@@ -159,11 +174,12 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
                           onPressed: () {
                             backToPreviousPage();
                           },
-                          child: const Align(
+                          child: Align(
                             child: Text(
-                              "Back",
-                              style: TextStyle(
-                                color: Colouring.colorButtonBlue,
+                              translatedText(context)
+                                  .finish_sm_screen_button_back,
+                              style: const TextStyle(
+                                color: Colouring.colorDarkDarkBlue,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -172,9 +188,9 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
                       ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
-                                Colouring.colorButtonBlue),
+                                Colouring.colorDarkBlue),
                             overlayColor: MaterialStateProperty.all(
-                                Colouring.colorButtonPressedBlue),
+                                Colouring.colorDarkDarkBlue),
                             shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20))),
@@ -189,10 +205,11 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
                               setSocialMedia();
                             }
                           },
-                          child: const Align(
+                          child: Align(
                             child: Text(
-                              "Done",
-                              style: TextStyle(
+                              translatedText(context)
+                                  .finish_sm_screen_button_done,
+                              style: const TextStyle(
                                 color: Colouring.colorWhite,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
@@ -218,7 +235,7 @@ class _FinishStateSocialMedia extends State<FinishSocialMedia> {
       "social_media": {
         socialMediaName: {
           "url": linkController.text.toString(),
-          "position": socialMediaLength + 1
+          "position": socialMediaLength == 0 ? 1 : socialMediaLength + 1
         }
       }
     }, SetOptions(merge: true));

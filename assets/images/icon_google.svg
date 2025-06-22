@@ -1,3 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="22.87" height="23.25" viewBox="0 0 22.87 23.25">
-  <path id="Icon_awesome-google" data-name="Icon awesome-google" d="M22.87,12.459c0,6.633-4.541,11.353-11.248,11.353a11.625,11.625,0,0,1,0-23.25A11.176,11.176,0,0,1,19.416,3.6L16.253,6.647C12.115,2.653,4.419,5.653,4.419,12.188a7.281,7.281,0,0,0,7.2,7.341c4.6,0,6.327-3.3,6.6-5.011h-6.6v-4H22.687A10.193,10.193,0,0,1,22.87,12.459Z" transform="translate(0 -0.563)" fill="#fff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="icon_google" transform="translate(-1601 -1182)">
+    <path id="Icon_awesome-google" data-name="Icon awesome-google" d="M22.87,12.459c0,6.633-4.541,11.353-11.248,11.353a11.625,11.625,0,1,1,0-23.25A11.176,11.176,0,0,1,19.416,3.6L16.253,6.647C12.115,2.653,4.419,5.653,4.419,12.188a7.281,7.281,0,0,0,7.2,7.341c4.6,0,6.327-3.3,6.6-5.011h-6.6v-4H22.687a10.193,10.193,0,0,1,.183,1.941Z" transform="translate(1601.567 1181.813)" fill="#fff"/>
+    <rect id="Rectangle_56" data-name="Rectangle 56" width="24" height="24" transform="translate(1601 1182)" fill="rgba(255,255,255,0)"/>
+  </g>
 </svg>
